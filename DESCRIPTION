@@ -1,0 +1,43 @@
+Package: plotlsirm
+Type: Package
+Title: Plot Toolkit for Latent Space Item Response Models
+Version: 0.1.0
+Authors@R: c(
+    person(
+        given   = "Jinwen",
+        family  = "Luo",
+        role    = c("aut", "cre"),
+        email   = "jevanluo@ucla.edu",
+        comment = c(ORCID = "0000-0002-8511-7165")),
+    person(
+        given   = "Minjeong",
+        family  = "Jeon",
+        role    = "aut",
+        email   = "mjjeon@ucla.edu",
+        comment = c(ORCID = "0000-0002-5880-4146")))
+Description: Provides publication‑quality and interactive plots for exploring
+    the posterior output of Latent Space Item Response Models (LSIRM),
+    including Posterior Interaction Profiles, radar charts, 2‑D latent maps,
+    and item‑similarity heat maps.
+License: GPL (>= 3)
+Encoding: UTF-8
+Depends: R (>= 3.6)
+Imports:
+    ggplot2 (>= 3.4),
+    rlang,
+    dplyr,
+    tidyr,
+    patchwork,
+    scales,
+    grid
+Suggests:
+    plotly,
+    testthat (>= 3.0.0)
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+URL: https://github.com/your_username/vislsirm
+BugReports: https://github.com/your_username/vislsirm/issues
+Author: Jinwen Luo [aut, cre] (<https://orcid.org/0000-0002-8511-7165>), Minjeong Jeon [aut] (<https://orcid.org/0000-0002-5880-4146>)
+Maintainer: Jinwen Luo <jevanluo@ucla.edu>
+Config/testthat/edition: 3
