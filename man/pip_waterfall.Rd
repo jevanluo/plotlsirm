@@ -8,12 +8,15 @@ pip_waterfall(
   alpha,
   beta,
   distance_mat,
+  gamma = NULL,
   alpha_lower = NULL,
   alpha_upper = NULL,
   distance_low = NULL,
   distance_up = NULL,
   item_group = NULL,
-  focal_id = 1
+  focal_id = 1,
+  density_adjust = 2,
+  y_limits = NULL
 )
 }
 \arguments{
@@ -25,6 +28,10 @@ parameters.}
 
 \item{distance_mat}{Numeric matrix \emph{N × I} of latent distances
 \eqn{d_{pi}} between persons and items.}
+
+\item{gamma}{Optional numeric scalar used to multiplicatively rescale
+all distances (and \code{distance_low}/\code{distance_up}, if provided) before
+computing personalized easiness. Defaults to \code{NULL} (no rescaling).}
 
 \item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N}) giving
 lower/upper bounds (e.g., 95 \% HDI) for each person’s \eqn{\alpha_j}.  If
@@ -39,6 +46,14 @@ personalised easiness.}
 
 \item{focal_id}{Integer index (1 ≤ \code{focal_id} ≤ \emph{N}) of the respondent to
 highlight.  Default is \code{1}.}
+
+\item{density_adjust}{Positive numeric scalar passed to
+\code{ggplot2::geom_density(adjust = ...)} to control the smoothness of the
+left-panel density estimate. Values > 1 increase the bandwidth (smoother
+curve); values < 1 decrease it (more detail). Default is \code{2}.}
+
+\item{y_limits}{Optional numeric length-2 vector \code{c(min, max)} that fixes the
+y-axis range for both panels.}
 }
 \value{
 A \href{https://patchwork.data-imaginist.com}{\code{patchwork}} object
@@ -55,7 +70,10 @@ The right panel (“waterfall”) plots each item’s easiness
 \eqn{\beta_i} as the starting point of a vertical arrow whose tip marks the
 personalized easiness
 \eqn{\delta_{ij} = \beta_i - d_{ij}}, where \eqn{d_{ij}} is the latent
-distance taken from \code{distance_mat}.  Arrows pointing \strong{up} indicate the
+distance taken from \code{distance_mat}. If \code{gamma} is supplied, distances are
+scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
+Uncertainty bounds in \code{distance_low}/\code{distance_up} are scaled by the same \eqn{\gamma}.
+Arrows pointing \strong{up} indicate the Arrows pointing \strong{up} indicate the
 item is \emph{easier} for the focal respondent than for the average person,
 whereas arrows pointing \strong{down} indicate it is \emph{harder}.
 }
@@ -67,13 +85,13 @@ beta  <- rnorm(I, sd = 0.7)
 dist  <- abs(matrix(rnorm(N * I, sd = 0.8), N, I))  # fake distances
 
 # Basic waterfall plot for the first respondent
-pip_waterfall(alpha, beta, dist, focal_id = 2)
+pip_waterfall(alpha, beta, gamma = 1.5, dist, focal_id = 2)
 
 # Add grouping and uncertainty bands
 groups <- rep(c("A", "B"), length.out = I)
 d_low  <- dist * 0.9; d_up <- dist * 1.1
 a_l   <- alpha - 0.25; a_u <- alpha + 0.25
-pip_waterfall(alpha, beta, dist,
+pip_waterfall(alpha, beta, gamma = 1, dist,
               alpha_lower = a_l, alpha_upper = a_u,
               distance_low = d_low, distance_up = d_up,
               item_group = groups, focal_id = 3)

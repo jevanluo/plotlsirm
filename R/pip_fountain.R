@@ -7,6 +7,9 @@
 #' panel: each item dot is placed at *–βᵢ* (the “fountain base”) and an arrow
 #' rises to the personalized easiness
 #' \deqn{\delta_{ij} = \beta_i - d_{ij}}{δ_pi = β_i – d_{ij}}.
+#' Distance taken from `distance_mat`. If `gamma` is supplied, distances are
+#' scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
+#' Uncertainty bounds in `distance_low`/`distance_up` are scaled by the same \eqn{\gamma}.
 #' Arrows that extend **above** the base indicate the item is *easier* for the
 #' respondent than average; arrows that fall short indicate it is *harder*.
 #'
@@ -16,6 +19,9 @@
 #'   parameters.
 #' @param distance_mat Numeric matrix *N × I* containing the latent distances
 #'   \eqn{d_{ij}} between persons and items.
+#' @param gamma Optional numeric scalar used to multiplicatively rescale
+#'   all distances (and `distance_low`/`distance_up`, if provided) before
+#'   computing personalized easiness. Defaults to `NULL` (no rescaling).
 #' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*)
 #'   providing lower/upper posterior intervals (e.g., 95 % HDI) for each
 #'   respondent’s \eqn{\alpha_j}.  The focal respondent’s band is shaded.
@@ -27,6 +33,12 @@
 #'   item groupings.  Enables color coding and a legend.
 #' @param focal_id Integer (1 ≤ `focal_id` ≤ *N*) selecting the respondent to
 #'   highlight.  Defaults to the first row.
+#' @param density_adjust Positive numeric scalar passed to
+#'   `ggplot2::geom_density(adjust = ...)` to control the smoothness of the
+#'   left-panel density estimate. Values > 1 increase the bandwidth (smoother
+#'   curve); values < 1 decrease it (more detail). Default is `2`.
+#' @param y_limits Optional numeric length-2 vector `c(min, max)` that fixes the
+#'   y-axis range for both panels.
 #'
 #' @return A `patchwork` object containing the combined left‑ and right‑hand
 #'   `ggplot2` panels.  The plot is automatically displayed; the value is
@@ -47,13 +59,13 @@
 #' dist  <- abs(matrix(rnorm(N * I, sd = 0.8), N, I))  # fake distances
 #'
 #' # Plain fountain plot for respondent 2
-#' pip_fountain(alpha, beta, dist, focal_id = 2)
+#' pip_fountain(alpha, beta, gamma = 1.5, dist, focal_id = 2)
 #'
 #' # Fountain plot with item groups and uncertainty intervals
 #' grp <- rep(c("MCQ", "Essay"), length.out = I)
 #' d_lo <- pmax(dist - 0.2, 0);  d_up <- dist + 0.2
 #' a_lo <- alpha - 0.3; a_up <- alpha + 0.3
-#' pip_fountain(alpha, beta, dist,
+#' pip_fountain(alpha, beta, gamma = 1, dist,
 #'              alpha_lower = a_lo, alpha_upper = a_up,
 #'              distance_low = d_lo, distance_up = d_up,
 #'              item_group = grp, focal_id = 4)
@@ -61,17 +73,27 @@
 #' @export
 pip_fountain <- function(alpha, beta,
                          distance_mat,
+                         gamma         = NULL,
                          alpha_lower   = NULL, alpha_upper   = NULL,
                          distance_low  = NULL, distance_up   = NULL,
                          item_group    = NULL,
-                         focal_id      = 1)
+                         focal_id      = 1,
+                         density_adjust = 2,
+                         y_limits = NULL)
 {
         stopifnot(length(alpha)  == nrow(distance_mat),
                   length(beta)   == ncol(distance_mat))
 
+        # --- NEW: optional distance scaling -----------------------------------
+        if (!is.null(gamma)) {
+                distance_mat <- gamma * distance_mat
+                if (!is.null(distance_low)) distance_low <- gamma * distance_low
+                if (!is.null(distance_up))  distance_up  <- gamma * distance_up
+        }
+
         N <- length(alpha); I <- length(beta)
         y_max <- max(abs(c(alpha,beta,alpha_lower,alpha_upper,distance_low,distance_up)), na.rm = TRUE)
-        y_lims <- c(-y_max, y_max) *1.2                  # symmetric limits
+        y_lims <- if (is.null(y_limits)) c(-y_max, y_max) * 1.2 else y_limits
 
         ## 1 ─ person table ------------------------------------------------------
         persons <- data.frame(
@@ -140,7 +162,8 @@ pip_fountain <- function(alpha, beta,
                                           xmin = sel$alpha_l[1], xmax = sel$alpha_u[1],
                                           ymin = -Inf, ymax = Inf,
                                           fill = "pink", alpha = .25)} +
-                ggplot2::geom_density(fill = "skyblue", alpha = .5) +
+                ggplot2::geom_density(fill = "skyblue", alpha = .5,
+                                      adjust = density_adjust) +
                 ggplot2::geom_point(data = dplyr::distinct(sel, alpha),
                                     ggplot2::aes(x = alpha, y = 0),
                                     shape = 8, size = 4, color = "darkorange") +

@@ -8,12 +8,15 @@ pip_fountain(
   alpha,
   beta,
   distance_mat,
+  gamma = NULL,
   alpha_lower = NULL,
   alpha_upper = NULL,
   distance_low = NULL,
   distance_up = NULL,
   item_group = NULL,
-  focal_id = 1
+  focal_id = 1,
+  density_adjust = 2,
+  y_limits = NULL
 )
 }
 \arguments{
@@ -25,6 +28,10 @@ parameters.}
 
 \item{distance_mat}{Numeric matrix \emph{N × I} containing the latent distances
 \eqn{d_{ij}} between persons and items.}
+
+\item{gamma}{Optional numeric scalar used to multiplicatively rescale
+all distances (and \code{distance_low}/\code{distance_up}, if provided) before
+computing personalized easiness. Defaults to \code{NULL} (no rescaling).}
 
 \item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N})
 providing lower/upper posterior intervals (e.g., 95 \% HDI) for each
@@ -40,6 +47,14 @@ item groupings.  Enables color coding and a legend.}
 
 \item{focal_id}{Integer (1 ≤ \code{focal_id} ≤ \emph{N}) selecting the respondent to
 highlight.  Defaults to the first row.}
+
+\item{density_adjust}{Positive numeric scalar passed to
+\code{ggplot2::geom_density(adjust = ...)} to control the smoothness of the
+left-panel density estimate. Values > 1 increase the bandwidth (smoother
+curve); values < 1 decrease it (more detail). Default is \code{2}.}
+
+\item{y_limits}{Optional numeric length-2 vector \code{c(min, max)} that fixes the
+y-axis range for both panels.}
 }
 \value{
 A \code{patchwork} object containing the combined left‑ and right‑hand
@@ -54,6 +69,9 @@ density for the focal respondent’s ability) but \strong{inverts} the right‑h
 panel: each item dot is placed at \emph{–βᵢ} (the “fountain base”) and an arrow
 rises to the personalized easiness
 \deqn{\delta_{ij} = \beta_i - d_{ij}}{δ_pi = β_i – d_{ij}}.
+Distance taken from \code{distance_mat}. If \code{gamma} is supplied, distances are
+scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
+Uncertainty bounds in \code{distance_low}/\code{distance_up} are scaled by the same \eqn{\gamma}.
 Arrows that extend \strong{above} the base indicate the item is \emph{easier} for the
 respondent than average; arrows that fall short indicate it is \emph{harder}.
 }
@@ -66,13 +84,13 @@ beta  <- rnorm(I, sd = 0.7)
 dist  <- abs(matrix(rnorm(N * I, sd = 0.8), N, I))  # fake distances
 
 # Plain fountain plot for respondent 2
-pip_fountain(alpha, beta, dist, focal_id = 2)
+pip_fountain(alpha, beta, gamma = 1.5, dist, focal_id = 2)
 
 # Fountain plot with item groups and uncertainty intervals
 grp <- rep(c("MCQ", "Essay"), length.out = I)
 d_lo <- pmax(dist - 0.2, 0);  d_up <- dist + 0.2
 a_lo <- alpha - 0.3; a_up <- alpha + 0.3
-pip_fountain(alpha, beta, dist,
+pip_fountain(alpha, beta, gamma = 1, dist,
              alpha_lower = a_lo, alpha_upper = a_up,
              distance_low = d_lo, distance_up = d_up,
              item_group = grp, focal_id = 4)

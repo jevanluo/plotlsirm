@@ -68,11 +68,16 @@
 #' I <- 6; N <- 40; D <- 2; M <- 300           # toy dimensions
 #'
 #' ## 1. Posterior mode ---------------------------------------------------
+#' w_base <- matrix(0, I, D); w_base[, 1] <- seq(-1.2, 1.2, length.out = I)  # items spread out
+#' z_base <- matrix(0, N, D); z_base[, 1] <- rep(c(-0.6, 0.6), length.out = N)  # people in two bands
+#'
 #' posterior <- list(
-#'   beta  = matrix(rnorm(M * I, 0, .6), M, I),
-#'   gamma = rgamma(M, 3, 2),
-#'   w     = array(rnorm(M * I * D, sd = .8), c(M, I, D)),
-#'   z     = array(rnorm(M * N * D),           c(M, N, D))
+#'         beta  = matrix(rnorm(M * I, 0, 0.25), M, I),         # smaller SD -> narrower ribbons
+#'         gamma = rgamma(M, shape = 300, rate = 300),           # tightly around 1
+#'         w     = array(rep(w_base, each = M), c(M, I, D)) +
+#'                 array(rnorm(M * I * D, sd = 0.12), c(M, I, D)),
+#'         z     = array(rep(z_base, each = M), c(M, N, D)) +
+#'                array(rnorm(M * N * D, sd = 0.12), c(M, N, D))
 #' )
 #'
 #' # population curve + one person; no ribbon (default)
@@ -83,9 +88,9 @@
 #' # same but with ribbon and three people
 #' lsirmicc(item_id   = 2,
 #'          posterior = posterior,
-#'          person_id = c(3, 22, 31),
+#'          person_id = c(22, 31),
 #'          ribbon    = TRUE,
-#'          person_cols = c("red", "blue", "forestgreen"))
+#'          person_cols = c("red", "blue"))
 #'
 #' ## 2. Point‑estimate mode ---------------------------------------------
 #' beta_hat  <- 0.3
@@ -98,8 +103,7 @@
 #'          gamma    = gamma_hat,
 #'          w_pos    = w_hat,
 #'          z_pos    = z_hat,
-#'          person_id = 7,
-#'          reference = "origin")
+#'          person_id = 7)
 #'
 #' @export
 lsirmicc <- function(item_id,
@@ -343,8 +347,10 @@ lsirmicc <- function(item_id,
                         y     = "Pr(Response=1)"
                 ) +
                 ggplot2::theme_minimal(base_size = 12) +
-                ggplot2::theme(legend.position = if (!is.null(person_id) &&
-                                                     length(person_id) > 1) "right" else "none")
+                #ggplot2::theme(legend.position = if (!is.null(person_id) &&
+                #                                     length(person_id) > 1) "right" else "none")
+                ggplot2::theme(legend.position = c(0.02, 0.98),
+                               legend.justification = c(0, 1))
 
         print(p)
         invisible(p)

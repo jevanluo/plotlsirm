@@ -124,17 +124,16 @@ w <- matrix(rnorm(30), ncol = 2)   # 15 items
 ## Basic map with default colors
 intermap2d(z, w)
 
-## Grouped items vs. grouped persons, with size ∝ |theta| and labels
+## Grouped items vs. grouped persons, with point size ∝ theta and labels size ∝ beta
 theta <- rnorm(nrow(z))
 beta  <- rnorm(nrow(w))
 intermap2d(
-  z, w,
-  person_group  = rep(c("A", "B"), each = 10),
-  item_group    = rep(letters[1:3], length.out = nrow(w)),
-  theta         = theta, beta = beta,
-  scale_z_size  = TRUE, scale_w_size = TRUE,
-  show_z_labels = FALSE, show_w_shapes = TRUE,
-  figuretitle   = "Latent-space interaction map"
+z, w,
+person_group  = rep(c("A", "B"), each = 10),
+item_group    = rep(letters[1:3], length.out = nrow(w)),
+theta         = theta, beta = beta,
+scale_z_size  = TRUE, scale_w_size = TRUE,
+figuretitle   = "Latent-space interaction map"
 )
 
 }

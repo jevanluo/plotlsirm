@@ -10,8 +10,8 @@ radarplot(
   max_radius = 100,
   branch_max = 10,
   overallAbility = NA,
-  ability_range = c(0, 100),
-  abilityCutoffs = c(30, 60),
+  ability_range = c(-3, 3),
+  abilityCutoffs = c(-1.68, 1.68),
   bgColors = c("red", "yellow", "green"),
   markerInd = NULL,
   point_cex = 4,
@@ -92,17 +92,22 @@ optionally coloring, labelling, and annotating each subject.
 }
 \examples{
 ## Single subject -------------------------------------------------
-scores <- c(Math = 78, Reading = 55, Science = 66, Arts = 42, Sport = 90)
-radarplot(scores, labels = names(scores),
-          overallAbility = 70, showOverallAbility = TRUE,
+#### the distance from a person to all items/item clusters
+dist_z_w <- c(item1 = 1.6, item2 = 0.8, item3 = 1.9, item4 = 2.5, item5 = 0.4)
+#### transform distance to strength
+strength <- exp(-dist_z_w)
+#### plot the radar
+radarplot(strength, labels = names(strength),
+          overallAbility = 1.8, showOverallAbility = TRUE,
           title = "Student A profile")
 
 ## Multiple subjects ---------------------------------------------
 set.seed(1)
-dat <- matrix(sample(40:100, 15, replace = TRUE), nrow = 3,
-              dimnames = list(NULL, c("Math", "Read", "Sci", "Arts", "Sport")))
+#### strength for 3 persons on 5 items
+dat <- matrix(rnorm(15,3,1), nrow = 3,
+              dimnames = list(NULL, c("item1", "item2", "item3", "item4", "item5")))
 radarplot(dat, labels = colnames(dat),
-          overallAbility = rowMeans(dat),
+          overallAbility = c(-1.8,0.5,2.5),
           subjectLabels  = c("Alice", "Bob", "Cara"),
           sampleColors   = c("#1b9e77", "#d95f02", "#7570b3"),
           showOverallAbility = TRUE,

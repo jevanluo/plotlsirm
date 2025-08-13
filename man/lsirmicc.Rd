@@ -110,11 +110,16 @@ set.seed(1)
 I <- 6; N <- 40; D <- 2; M <- 300           # toy dimensions
 
 ## 1. Posterior mode ---------------------------------------------------
+w_base <- matrix(0, I, D); w_base[, 1] <- seq(-1.2, 1.2, length.out = I)  # items spread out
+z_base <- matrix(0, N, D); z_base[, 1] <- rep(c(-0.6, 0.6), length.out = N)  # people in two bands
+
 posterior <- list(
-  beta  = matrix(rnorm(M * I, 0, .6), M, I),
-  gamma = rgamma(M, 3, 2),
-  w     = array(rnorm(M * I * D, sd = .8), c(M, I, D)),
-  z     = array(rnorm(M * N * D),           c(M, N, D))
+        beta  = matrix(rnorm(M * I, 0, 0.25), M, I),         # smaller SD -> narrower ribbons
+        gamma = rgamma(M, shape = 300, rate = 300),           # tightly around 1
+        w     = array(rep(w_base, each = M), c(M, I, D)) +
+                array(rnorm(M * I * D, sd = 0.12), c(M, I, D)),
+        z     = array(rep(z_base, each = M), c(M, N, D)) +
+               array(rnorm(M * N * D, sd = 0.12), c(M, N, D))
 )
 
 # population curve + one person; no ribbon (default)
@@ -125,9 +130,9 @@ lsirmicc(item_id   = 2,
 # same but with ribbon and three people
 lsirmicc(item_id   = 2,
          posterior = posterior,
-         person_id = c(3, 22, 31),
+         person_id = c(22, 31),
          ribbon    = TRUE,
-         person_cols = c("red", "blue", "forestgreen"))
+         person_cols = c("red", "blue"))
 
 ## 2. Point‑estimate mode ---------------------------------------------
 beta_hat  <- 0.3
@@ -140,7 +145,6 @@ lsirmicc(item_id  = 4,
          gamma    = gamma_hat,
          w_pos    = w_hat,
          z_pos    = z_hat,
-         person_id = 7,
-         reference = "origin")
+         person_id = 7)
 
 }

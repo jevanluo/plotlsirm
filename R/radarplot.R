@@ -54,30 +54,36 @@
 #'
 #' @examples
 #' ## Single subject -------------------------------------------------
-#' scores <- c(Math = 78, Reading = 55, Science = 66, Arts = 42, Sport = 90)
-#' radarplot(scores, labels = names(scores),
-#'           overallAbility = 70, showOverallAbility = TRUE,
+#' #### the distance from a person to all items/item clusters
+#' dist_z_w <- c(item1 = 1.6, item2 = 0.8, item3 = 1.9, item4 = 2.5, item5 = 0.4)
+#' #### transform distance to strength
+#' strength <- exp(-dist_z_w)
+#' #### plot the radar
+#' radarplot(strength, labels = names(strength),
+#'           overallAbility = 1.8, showOverallAbility = TRUE,
 #'           title = "Student A profile")
 #'
 #' ## Multiple subjects ---------------------------------------------
 #' set.seed(1)
-#' dat <- matrix(sample(40:100, 15, replace = TRUE), nrow = 3,
-#'               dimnames = list(NULL, c("Math", "Read", "Sci", "Arts", "Sport")))
+#' #### strength for 3 persons on 5 items
+#' dat <- matrix(rnorm(15,3,1), nrow = 3,
+#'               dimnames = list(NULL, c("item1", "item2", "item3", "item4", "item5")))
 #' radarplot(dat, labels = colnames(dat),
-#'           overallAbility = rowMeans(dat),
+#'           overallAbility = c(-1.8,0.5,2.5),
 #'           subjectLabels  = c("Alice", "Bob", "Cara"),
 #'           sampleColors   = c("#1b9e77", "#d95f02", "#7570b3"),
 #'           showOverallAbility = TRUE,
 #'           title = "Class-level comparison")
 #'
 #' @export
+
 radarplot <- function(data = NULL,         # Numeric vector (one subject) or matrix/data frame (multiple subjects)
                              labels,              # Branch (axis) labels (character vector)
                              max_radius = 100,    # Maximum drawing radius; the ability_range is rescaled to [0, max_radius]
                              branch_max = 10,     # (Not used in this version; branch scaling is relative to overall ability)
                              overallAbility = NA, # Overall ability value. For multiple subjects supply either a single value or a vector (one per subject)
-                             ability_range = c(0, 100),  # The numeric range that defines the radar background grid
-                             abilityCutoffs = c(30, 60), # (Not used in this version for coloring)
+                             ability_range = c(-3, 3),  # The numeric range that defines the radar background grid
+                             abilityCutoffs = c(-1.68, 1.68), # (Not used in this version for coloring)
                              bgColors = c("red", "yellow", "green"),  # (Not used here for multiple subjects)
                              markerInd = NULL,  # Indicator vector (0: hollow markers, 1: solid markers) for branch markers
                              point_cex = 4,       # Marker (point) size

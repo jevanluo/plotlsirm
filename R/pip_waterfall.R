@@ -9,7 +9,10 @@
 #' \eqn{\beta_i} as the starting point of a vertical arrow whose tip marks the
 #' personalized easiness
 #' \eqn{\delta_{ij} = \beta_i - d_{ij}}, where \eqn{d_{ij}} is the latent
-#' distance taken from `distance_mat`.  Arrows pointing **up** indicate the
+#' distance taken from `distance_mat`. If `gamma` is supplied, distances are
+#' scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
+#' Uncertainty bounds in `distance_low`/`distance_up` are scaled by the same \eqn{\gamma}.
+#' Arrows pointing **up** indicate the Arrows pointing **up** indicate the
 #' item is *easier* for the focal respondent than for the average person,
 #' whereas arrows pointing **down** indicate it is *harder*.
 #'
@@ -19,6 +22,9 @@
 #'   parameters.
 #' @param distance_mat Numeric matrix *N × I* of latent distances
 #'   \eqn{d_{pi}} between persons and items.
+#' @param gamma Optional numeric scalar used to multiplicatively rescale
+#'   all distances (and `distance_low`/`distance_up`, if provided) before
+#'   computing personalized easiness. Defaults to `NULL` (no rescaling).
 #' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*) giving
 #'   lower/upper bounds (e.g., 95 % HDI) for each person’s \eqn{\alpha_j}.  If
 #'   provided, the focal respondent’s interval is shaded in pink.
@@ -30,6 +36,12 @@
 #*   each item to a group.  Used to color the item dots and activate a legend.
 #' @param focal_id Integer index (1 ≤ `focal_id` ≤ *N*) of the respondent to
 #'   highlight.  Default is `1`.
+#' @param density_adjust Positive numeric scalar passed to
+#'   `ggplot2::geom_density(adjust = ...)` to control the smoothness of the
+#'   left-panel density estimate. Values > 1 increase the bandwidth (smoother
+#'   curve); values < 1 decrease it (more detail). Default is `2`.
+#' @param y_limits Optional numeric length-2 vector `c(min, max)` that fixes the
+#'   y-axis range for both panels.
 #'
 #' @return A [`patchwork`](https://patchwork.data-imaginist.com) object
 #'   containing two `ggplot2` panels.  The plot is also displayed as a side
@@ -49,13 +61,13 @@
 #' dist  <- abs(matrix(rnorm(N * I, sd = 0.8), N, I))  # fake distances
 #'
 #' # Basic waterfall plot for the first respondent
-#' pip_waterfall(alpha, beta, dist, focal_id = 2)
+#' pip_waterfall(alpha, beta, gamma = 1.5, dist, focal_id = 2)
 #'
 #' # Add grouping and uncertainty bands
 #' groups <- rep(c("A", "B"), length.out = I)
 #' d_low  <- dist * 0.9; d_up <- dist * 1.1
 #' a_l   <- alpha - 0.25; a_u <- alpha + 0.25
-#' pip_waterfall(alpha, beta, dist,
+#' pip_waterfall(alpha, beta, gamma = 1, dist,
 #'               alpha_lower = a_l, alpha_upper = a_u,
 #'               distance_low = d_low, distance_up = d_up,
 #'               item_group = groups, focal_id = 3)
@@ -63,17 +75,27 @@
 #' @export
 pip_waterfall <- function(alpha, beta,
                           distance_mat,
+                          gamma         = NULL,
                           alpha_lower   = NULL, alpha_upper   = NULL,
                           distance_low  = NULL, distance_up   = NULL,
                           item_group    = NULL,
-                          focal_id      = 1)
+                          focal_id      = 1,
+                          density_adjust = 2,
+                          y_limits = NULL)
 {
         stopifnot(length(alpha)  == nrow(distance_mat),
                   length(beta)   == ncol(distance_mat))
 
+        # --- NEW: optional distance scaling -----------------------------------
+        if (!is.null(gamma)) {
+                distance_mat <- gamma * distance_mat
+                if (!is.null(distance_low)) distance_low <- gamma * distance_low
+                if (!is.null(distance_up))  distance_up  <- gamma * distance_up
+        }
+
         N <- length(alpha); I <- length(beta)
         y_max <- max(abs(c(alpha,beta,alpha_lower,alpha_upper,distance_low,distance_up)), na.rm = TRUE)
-        y_lims <- c(-y_max, y_max) *1.2                   # symmetric limits
+        y_lims <- if (is.null(y_limits)) c(-y_max, y_max) * 1.2 else y_limits
 
         ## 1 ─ person table ------------------------------------------------------
         persons <- data.frame(
@@ -142,7 +164,8 @@ pip_waterfall <- function(alpha, beta,
                                           xmin = sel$alpha_l[1], xmax = sel$alpha_u[1],
                                           ymin = -Inf, ymax = Inf,
                                           fill = "pink", alpha = .25)} +
-                ggplot2::geom_density(fill = "skyblue", alpha = .5) +
+                ggplot2::geom_density(fill = "skyblue", alpha = .5,
+                                      adjust = density_adjust) +
                 ggplot2::geom_point(data = dplyr::distinct(sel, alpha),
                                     ggplot2::aes(x = alpha, y = 0),
                                     shape = 8, size = 4, color = "darkorange") +

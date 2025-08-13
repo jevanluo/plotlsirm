@@ -46,7 +46,8 @@ interprofile("waterfall",
             alpha = alpha,
             beta  = beta,
             distance_mat = dist,
-            item_group = rep(LETTERS[1:2], length.out = length(beta)))
+            item_group = rep(LETTERS[1:2], length.out = length(beta)),
+            y_limits=c(-3,2))
 
 }
 \seealso{

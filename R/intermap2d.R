@@ -68,17 +68,16 @@
 #' ## Basic map with default colors
 #' intermap2d(z, w)
 #'
-#' ## Grouped items vs. grouped persons, with size ∝ |theta| and labels
+#' ## Grouped items vs. grouped persons, with point size ∝ theta and labels size ∝ beta
 #' theta <- rnorm(nrow(z))
 #' beta  <- rnorm(nrow(w))
 #' intermap2d(
-#'   z, w,
-#'   person_group  = rep(c("A", "B"), each = 10),
-#'   item_group    = rep(letters[1:3], length.out = nrow(w)),
-#'   theta         = theta, beta = beta,
-#'   scale_z_size  = TRUE, scale_w_size = TRUE,
-#'   show_z_labels = FALSE, show_w_shapes = TRUE,
-#'   figuretitle   = "Latent-space interaction map"
+#' z, w,
+#' person_group  = rep(c("A", "B"), each = 10),
+#' item_group    = rep(letters[1:3], length.out = nrow(w)),
+#' theta         = theta, beta = beta,
+#' scale_z_size  = TRUE, scale_w_size = TRUE,
+#' figuretitle   = "Latent-space interaction map"
 #' )
 #'
 #' @export
@@ -109,7 +108,7 @@ intermap2d <- function(
                 z_border_width  = 0.5,
                 z_label_size    = 4,  w_label_size = 4,
                 show_z_labels   = FALSE, show_w_labels = TRUE,
-                show_z_shapes   = TRUE,  show_w_shapes = FALSE        # <- default TRUE now
+                show_z_shapes   = TRUE,  show_w_shapes = FALSE
 ) {
 
         ## ---------- data prep ----------
@@ -131,7 +130,7 @@ intermap2d <- function(
         w_df$al <- if (alpha_w_scale) rescale_to_range(beta,  to = w_alpha_range) else 1
 
         ## ---------- coloring ----------
-        default_z_col <- "grey"   # persons muted
+        default_z_col <- "grey60"   # persons muted
         default_w_col <- "red"      # items highlighted
 
         person_legend <- FALSE
@@ -239,29 +238,63 @@ intermap2d <- function(
         p <- p + ggplot2::guides(alpha = "none")
 
         ## ---------- labels ----------
+        ## ---------- labels ----------
         if (show_z_labels) {
-                if (person_legend)
-                        p <- p + ggplot2::geom_text(
-                                data = z_df,
-                                ggplot2::aes(.data$x, .data$y, label = personlabels, color = .data$grp),
-                                size = z_label_size, fontface = "bold")
-                else
-                        p <- p + ggplot2::geom_text(
-                                data = z_df,
-                                ggplot2::aes(.data$x, .data$y, label = personlabels),
-                                size = z_label_size, fontface = "bold", color = z_df$col)
+                if (person_legend) {
+                        if (scale_z_size) {
+                                p <- p + ggplot2::geom_text(
+                                        data = z_df,
+                                        ggplot2::aes(.data$x, .data$y, label = personlabels,
+                                                     color = .data$grp, size = .data$sz),
+                                        fontface = "bold")
+                        } else {
+                                p <- p + ggplot2::geom_text(
+                                        data = z_df,
+                                        ggplot2::aes(.data$x, .data$y, label = personlabels, color = .data$grp),
+                                        size = z_label_size, fontface = "bold")
+                        }
+                } else {
+                        if (scale_z_size) {
+                                p <- p + ggplot2::geom_text(
+                                        data = z_df,
+                                        ggplot2::aes(.data$x, .data$y, label = personlabels, size = .data$sz),
+                                        fontface = "bold", color = z_df$col)
+                        } else {
+                                p <- p + ggplot2::geom_text(
+                                        data = z_df,
+                                        ggplot2::aes(.data$x, .data$y, label = personlabels),
+                                        size = z_label_size, fontface = "bold", color = z_df$col)
+                        }
+                }
         }
+
         if (show_w_labels) {
-                if (item_legend)
-                        p <- p + ggplot2::geom_text(
-                                data = w_df,
-                                ggplot2::aes(.data$x, .data$y, label = itemlabels, color = .data$grp),
-                                size = w_label_size, fontface = "bold")
-                else
-                        p <- p + ggplot2::geom_text(
-                                data = w_df,
-                                ggplot2::aes(.data$x, .data$y, label = itemlabels),
-                                size = w_label_size, fontface = "bold", color = w_df$col)
+                if (item_legend) {
+                        if (scale_w_size) {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels,
+                                                     color = .data$grp, size = .data$sz),
+                                        fontface = "bold")
+                        } else {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels, color = .data$grp),
+                                        size = w_label_size, fontface = "bold")
+                        }
+                } else {
+                        if (scale_w_size) {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels, size = .data$sz),
+                                        fontface = "bold", color = w_df$col)
+                        } else {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels),
+                                        size = w_label_size, fontface = "bold", color = w_df$col)
+                        }
+                }
         }
 
         if (!is.null(figuretitle)) p <- p + ggplot2::labs(title = figuretitle)
