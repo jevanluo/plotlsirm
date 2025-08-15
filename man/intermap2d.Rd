@@ -2,7 +2,7 @@
 % Please edit documentation in R/intermap2d.R
 \name{intermap2d}
 \alias{intermap2d}
-\title{2‑D latent‑space interaction map (persons vs. items)}
+\title{2-D latent-space interaction map (persons vs. items)}
 \usage{
 intermap2d(
   z,
@@ -12,16 +12,34 @@ intermap2d(
   item_group = NULL,
   person_colors = NULL,
   item_colors = NULL,
-  theta = NULL,
+  alpha = NULL,
   beta = NULL,
-  scale_z_size = FALSE,
-  scale_w_size = FALSE,
-  z_size_range = c(2, 6),
-  w_size_range = c(2, 8),
-  alpha_z_scale = FALSE,
-  alpha_w_scale = FALSE,
-  z_alpha_range = c(0.3, 1),
-  w_alpha_range = c(0.3, 1),
+  z_shape_size_scale = FALSE,
+  w_shape_size_scale = FALSE,
+  z_shape_size_range = c(2, 6),
+  w_shape_size_range = c(2, 8),
+  z_shape_size = 2.5,
+  w_shape_size = 3,
+  z_label_size_scale = NULL,
+  w_label_size_scale = NULL,
+  z_label_size_range = c(3, 7),
+  w_label_size_range = c(3, 7),
+  z_label_color = "navy",
+  w_label_color = "firebrick",
+  z_label_size = 4,
+  w_label_size = 4,
+  z_shape_opacity_scale = FALSE,
+  w_shape_opacity_scale = FALSE,
+  z_shape_opacity_range = c(0.3, 1),
+  w_shape_opacity_range = c(0.3, 1),
+  z_shape_fixed_opacity = NULL,
+  w_shape_fixed_opacity = NULL,
+  z_shape_color_gradient = FALSE,
+  w_shape_color_gradient = FALSE,
+  z_shape_color_values = NULL,
+  w_shape_color_values = NULL,
+  shape_color_gradient_low = "grey80",
+  shape_color_gradient_high = "navy",
   show_ticks = FALSE,
   xlim_range = NULL,
   ylim_range = NULL,
@@ -30,110 +48,216 @@ intermap2d(
   figuretitle = NULL,
   z_shape = 16,
   w_shape = 17,
+  z_shape_color = "navy",
+  w_shape_color = "firebrick",
   z_border_width = 0.5,
-  z_label_size = 4,
-  w_label_size = 4,
   show_z_labels = FALSE,
-  show_w_labels = TRUE,
+  show_w_labels = FALSE,
   show_z_shapes = TRUE,
-  show_w_shapes = FALSE
+  show_w_shapes = TRUE,
+  legend_title = "legend",
+  show_size_legend = FALSE
 )
 }
 \arguments{
-\item{z}{Numeric matrix (\emph{N} × 2). Person coordinates (rows = persons,
-cols = dimensions).}
+\item{z, w}{Numeric matrices with 2 columns: coordinates for persons/items.}
 
-\item{w}{Numeric matrix (\emph{I} × 2). Item coordinates (rows = items,
-cols = dimensions).}
+\item{gamma}{Optional scalar stretch factor applied to both z and w.}
 
-\item{gamma}{Numeric scalar.  Optional global stretch factor applied to both
-person and item coordinates (useful for visualising different values of a
-distance weight \eqn{\gamma}).}
+\item{person_group, item_group}{Optional factor/character for grouping colors.}
 
-\item{item_group, person_group}{Optional character/factor vectors defining
-group membership for items and persons, respectively.  When supplied,
-distinct hues are assigned per group and a legend is shown.}
+\item{person_colors, item_colors}{Optional explicit color vectors (length N/I).}
 
-\item{person_colors, item_colors}{Optional character vectors of explicit
-colors (one per row of \code{z} or \code{w}).  Overrides the \emph{_group} mechanism and
-suppresses the legend.}
+\item{alpha, beta}{Optional vectors used to scale shape/label sizes, opacity,
+and (optionally) gradients for persons/items, respectively.}
 
-\item{beta, theta}{Optional numeric vectors of length \emph{I} and \emph{N} used for
-mapping item/person statistics to point size or transparency.  Ignored
-unless the corresponding \verb{scale_*} argument is \code{TRUE}.}
+\item{z_shape_size_scale, w_shape_size_scale}{Logical: scale \strong{shape} sizes by alpha/beta.}
 
-\item{scale_z_size, scale_w_size}{Logical.  Rescale \code{theta} / \code{beta} to point
-sizes using \code{z_size_range} / \code{w_size_range}.}
+\item{z_shape_size_range, w_shape_size_range}{Length-2 numeric: shape size ranges (when scaling).}
 
-\item{z_size_range, w_size_range}{Length‑2 numeric vectors giving the minimum
-and maximum point sizes for persons/items when size scaling is enabled.}
+\item{z_shape_size, w_shape_size}{Numeric: fixed shape sizes when size scaling is OFF.}
 
-\item{alpha_z_scale, alpha_w_scale}{Logical.  Rescale \code{theta} / \code{beta} to
-point transparency using \code{z_alpha_range} / \code{w_alpha_range}.}
+\item{z_label_size_scale, w_label_size_scale}{Logical: scale \strong{label} sizes.
+If \code{NULL}, defaults to the corresponding shape-size flag.}
 
-\item{z_alpha_range, w_alpha_range}{Length‑2 numeric vectors giving the
-minimum and maximum alpha (opacity) used when alpha scaling is enabled.}
+\item{z_label_size_range, w_label_size_range}{Length-2 numeric: label size ranges.}
 
-\item{show_ticks}{Logical.  Draw axis ticks and numeric labels (\code{TRUE}) or
-hide them (\code{FALSE}, default).}
+\item{z_label_color, w_label_color}{Label colors; if \code{NULL}, labels follow the
+layer’s color (group/gradient) or fixed color/vector as appropriate.}
 
-\item{xlim_range, ylim_range}{Optional length‑2 numeric vectors that override
-the automatically determined symmetric axis limits.}
+\item{z_label_size, w_label_size}{Fixed \strong{label} sizes when not scaling.}
 
-\item{itemlabels, personlabels}{Character vectors supplying custom text
-labels for items/persons.  Defaults to \code{"I1"}, \code{"I2"}, … and
-\code{"P1"}, \code{"P2"}, … when \code{NULL}.}
+\item{z_shape_opacity_scale, w_shape_opacity_scale}{Logical: scale \strong{shape opacity} by alpha/beta.}
 
-\item{figuretitle}{Optional character string added as the plot title.}
+\item{z_shape_opacity_range, w_shape_opacity_range}{Length-2 numeric: opacity ranges.}
 
-\item{z_shape, w_shape}{Point shapes for persons and items (see
-\code{?ggplot2::geom_point} for codes).  Default: 16 (solid circle) for persons
-and 17 (solid triangle) for items.}
+\item{z_shape_fixed_opacity, w_shape_fixed_opacity}{Optional constant opacity (0..1) for shapes.}
 
-\item{z_border_width}{Numeric.  Stroke width for person points (only visible
-for filled shapes that have a border aesthetic).}
+\item{z_shape_color_gradient, w_shape_color_gradient}{Logical: color shapes by a gradient
+(darker ⇒ higher). Overrides groups/colors for that layer.}
 
-\item{z_label_size, w_label_size}{Numeric text sizes for person/item labels
-(only used when \verb{show_*_labels} is \code{TRUE}).}
+\item{z_shape_color_values, w_shape_color_values}{Optional numeric drivers for gradients
+(defaults: \code{alpha} / \code{beta} respectively).}
 
-\item{show_z_labels, show_w_labels}{Logical flags controlling whether text
-labels for persons/items are displayed.}
+\item{shape_color_gradient_low, shape_color_gradient_high}{Colors for the gradient scale.}
 
-\item{show_z_shapes, show_w_shapes}{Logical flags controlling whether the
-actual point symbols for persons/items are drawn.  For example, you may
-wish to show only item shapes and label persons.}
+\item{show_ticks}{Logical: draw axis ticks/labels.}
+
+\item{xlim_range, ylim_range}{Optional axis limits (symmetric if \code{NULL}).}
+
+\item{itemlabels, personlabels}{Optional labels (defaults: "I1..", "P1..").}
+
+\item{figuretitle}{Optional plot title.}
+
+\item{z_shape, w_shape}{ggplot2 shape codes for persons/items (see \code{?ggplot2::geom_point}).}
+
+\item{z_shape_color, w_shape_color}{Fixed fallback \strong{shape} colors when not mapping.}
+
+\item{z_border_width}{Stroke width for z shapes (when applicable).}
+
+\item{show_z_labels, show_w_labels}{Logical: draw labels for z/w.}
+
+\item{show_z_shapes, show_w_shapes}{Logical: draw shapes for z/w.}
+
+\item{legend_title}{Character or expression: the legend title (when shown).}
+
+\item{show_size_legend}{Logical: show a size legend (default \code{FALSE}).}
 }
 \value{
-(Invisibly) a \code{ggplot} object containing the constructed plot.  The
-plot is also sent to the current graphics device as a side effect.
+Invisibly returns a \code{ggplot} object; also prints the plot.
 }
 \description{
-Produces a publication‑ready scatter plot of person and item coordinates in a
-two‑dimensional latent space.  The function is highly configurable: points
-can be grouped and color‑coded, sized or alpha‑scaled by auxiliary
-statistics (e.g., \eqn{\theta_p}, \eqn{\beta_i}), labelled, reshaped, and
-bounded by user‑supplied axis limits.  All graphics are rendered with
-\strong{ggplot2} and the resulting plot object is returned invisibly after being
-printed, so you can further modify it if desired.
+Persons (z) and items (w) in a 2-D latent space with flexible styling.
+Person statistic = alpha (α_p), item statistic = beta (β_i).
+}
+\details{
+\strong{Coloring & legends}
+\itemize{
+\item A color legend appears when colors are \strong{mapped} via groups or gradients.
+For fixed colors/shapes on both layers, the function creates a simple
+two-entry legend ("Persons", "Items") using constant mappings; when shapes
+are off but labels are on, it builds a labels-only legend with colored
+swatches. The legend title is controlled by \code{legend_title}.
+\item Opacity (ggplot “alpha”) and size legends are hidden by default. Set
+\code{show_size_legend = TRUE} to show a size legend when size mapping is used.
+\item When \code{person_colors} / \code{item_colors} are \strong{vectors} and \code{z_label_color} /
+\code{w_label_color} are \code{NULL}, label colors follow those per-observation vectors.
+}
+
+\strong{Opacity}
+\itemize{
+\item Transparency is called \emph{opacity} to avoid confusion with the statistic
+\code{alpha}. When you supply explicit fixed colors (single color or vector),
+default opacity is full (\code{1}) unless you enable \verb{*_shape_opacity_scale}
+or set \verb{*_shape_fixed_opacity}.
+}
+
+\strong{Sizes}
+\itemize{
+\item Shape sizes are fixed by \code{z_shape_size} / \code{w_shape_size} unless
+\code{z_shape_size_scale} / \code{w_shape_size_scale} are \code{TRUE}, in which case
+sizes are scaled by \code{alpha} / \code{beta} into \code{z_shape_size_range} /
+\code{w_shape_size_range}.
+\item Label text sizes are fixed by \code{z_label_size} / \code{w_label_size} unless
+\code{z_label_size_scale} / \code{w_label_size_scale} are \code{TRUE}, in which case they
+are scaled by \code{alpha} / \code{beta} into \code{z_label_size_range} / \code{w_label_size_range}.
+}
 }
 \examples{
+### example data
 set.seed(1)
-z <- matrix(rnorm(40), ncol = 2)   # 20 persons
-w <- matrix(rnorm(30), ncol = 2)   # 15 items
+z <- matrix(rnorm(40), 20, 2)  # persons
+w <- matrix(rnorm(30), 15, 2)  # items
+alpha <- rnorm(nrow(z))        # person α
+beta  <- rnorm(nrow(w))        # item β
 
-## Basic map with default colors
+### 1) minimal, fixed colors & shapes
 intermap2d(z, w)
 
-## Grouped items vs. grouped persons, with point size ∝ theta and labels size ∝ beta
-theta <- rnorm(nrow(z))
-beta  <- rnorm(nrow(w))
+### 2) minimal, fixed shapes for persons and labels for items
 intermap2d(
-z, w,
-person_group  = rep(c("A", "B"), each = 10),
-item_group    = rep(letters[1:3], length.out = nrow(w)),
-theta         = theta, beta = beta,
-scale_z_size  = TRUE, scale_w_size = TRUE,
-figuretitle   = "Latent-space interaction map"
+  z, w,
+  show_w_shapes = FALSE, show_w_labels = TRUE
+)
+
+### 3) Grouped colors + sized shapes, formal legend title
+intermap2d(
+  z, w,
+  person_group = rep(c("Cohort A", "Cohort B"), length.out = nrow(z)),
+  item_group   = rep(c("Domain X", "Domain Y", "Domain Z"), length.out = nrow(w)),
+  alpha = alpha, beta = beta,
+  z_shape_size_scale = TRUE, z_shape_size_range = c(2, 6),
+  w_shape_size_scale = TRUE, w_shape_size_range = c(2, 8),
+  show_z_shapes = TRUE, show_w_shapes = FALSE,
+  show_w_labels = TRUE, legend_title = "Cohort / Domain"
+)
+
+### 4) Gradient for persons only (darker = higher α), labels scaled by α
+intermap2d(
+  z, w,
+  alpha = alpha,
+  z_shape_color_gradient = TRUE,     # z by gradient
+  w_shape_color          = "red",    # w fixed color
+  z_label_size_scale     = TRUE,     # label size ∝ α
+  show_w_shapes = FALSE,
+  show_w_labels = TRUE,
+  # shape_color_gradient_low = "grey80", shape_color_gradient_high = "navy",
+  legend_title = expression(alpha[p])
+)
+
+### 5) Gradient for both α (persons) and β (items), shared legend
+intermap2d(
+  z, w,
+  alpha = alpha, beta = beta,
+  z_shape_color_gradient = TRUE, w_shape_color_gradient = TRUE,
+  shape_color_gradient_low = "grey80", shape_color_gradient_high = "navy",
+  z_shape_size_scale = TRUE, w_shape_size_scale = TRUE,
+  show_z_shapes = TRUE, show_w_shapes = TRUE,
+  show_z_labels = FALSE, show_w_labels = FALSE,
+  legend_title = "Intensity (α persons, β items)"
+)
+
+### 6) Explicit per-observation colors (vectors) + label-only
+z_cols <- ifelse(alpha > 0, "#1f77b4", "#AEC7E8")
+w_cols <- ifelse(beta  > 0, "#d62728", "#FF9896")
+intermap2d(
+  z, w,
+  person_colors = z_cols, item_colors = w_cols,
+  show_z_shapes = FALSE, show_w_shapes = FALSE,
+  show_z_labels = TRUE,  show_w_labels = TRUE
+)
+
+### 7) Opacity scaling + fixed shape sizes
+intermap2d(
+  z, w,
+  alpha = alpha, beta = beta,
+  z_shape_opacity_scale = TRUE,  z_shape_opacity_range = c(0.2, 1.0),
+  w_shape_opacity_scale = TRUE,  w_shape_opacity_range = c(0.4, 1.0),
+  z_shape_color = "black", w_shape_color = "orange3",
+  z_shape_size = 3, w_shape_size = 3.5,        # fixed sizes (no size scaling)
+  show_z_shapes = TRUE, show_w_shapes = TRUE
+)
+
+### 8) Label-only scaling; shape sizes fixed; custom legend title for groups
+intermap2d(
+  z, w,
+  person_group = rep(c("High", "Low"), length.out = nrow(z)),
+  alpha = alpha, beta = beta,
+  z_label_size_scale = TRUE, w_label_size_scale = TRUE,
+  z_label_size_range = c(3, 7), w_label_size_range = c(3, 7),
+  show_z_labels = TRUE, show_w_labels = FALSE,
+  show_z_shapes = FALSE, show_w_shapes = TRUE,
+  legend_title = "Performance Group"
+)
+
+### 9) Stretch coordinates + axis ticks + symmetric limits
+intermap2d(
+  z, w,
+  gamma = 1.5,
+  show_ticks = TRUE,
+  xlim_range = c(-4, 4), ylim_range = c(-4, 4),
+  person_group = rep(c("Train","Test"), length.out = nrow(z)),
+  legend_title = "Set Membership"
 )
 
 }
