@@ -2,7 +2,7 @@
 % Please edit documentation in R/lsirmicc.R
 \name{lsirmicc}
 \alias{lsirmicc}
-\title{Latent‑Space Item Characteristic Curve (ICC)}
+\title{Latent-Space Item Characteristic Curve (ICC)}
 \usage{
 lsirmicc(
   item_id,
@@ -14,7 +14,7 @@ lsirmicc(
   alpha_grid = seq(-4, 4, length.out = 201),
   person_id = NULL,
   compare = TRUE,
-  ribbon = FALSE,
+  credibleRibbon = FALSE,
   cred_level = 0.95,
   reference = c("item", "person-global", "origin"),
   ref_col = "grey40",
@@ -26,23 +26,23 @@ lsirmicc(
 
 \item{posterior}{Optional list of draws with components
 \describe{
-\item{\code{beta}}{\code{M × I} matrix of item intercepts.}
-\item{\code{gamma}}{Length‑\code{M} vector of distance weights.}
-\item{\code{w}}{Either an \code{M × I × D} array or a length‑\code{M} list
-of \code{I × D} matrices of item coordinates.}
+\item{\code{beta}}{\code{M × I} matrix of item intercepts.}
+\item{\code{gamma}}{Length-\code{M} vector of distance weights.}
+\item{\code{w}}{Either an \code{M × I × D} array or a length-\code{M} list
+of \code{I × D} matrices of item coordinates.}
 \item{\code{z}}{Optional array/list of person coordinates (same format as
 \code{w}). Only needed if you request \code{person_id} or
 \code{reference = "person-global"}.}
 }}
 
 \item{beta, gamma}{Numeric point estimates used \strong{only} when
-\code{posterior = NULL}.  \code{beta} may be scalar or length‑\code{I}.}
+\code{posterior = NULL}.  \code{beta} may be scalar or length-\code{I}.}
 
-\item{w_pos, z_pos}{Matrices of point estimates for item (\code{I × D}) and
-person (\code{N × D}) coordinates, used only in point‑estimate mode.}
+\item{w_pos, z_pos}{Matrices of point estimates for item (\code{I × D}) and
+person (\code{N × D}) coordinates, used only when \code{posterior = NULL}.}
 
 \item{alpha_grid}{Numeric vector of ability values (default
-\code{seq(-4, 4, length.out = 201)}).}
+\code{seq(-4, 4, length.out = 201)}).}
 
 \item{person_id}{\code{NULL} (no person curves) or integer vector of
 respondent indices to overlay.}
@@ -51,9 +51,9 @@ respondent indices to overlay.}
 drawn in addition to any person curves; if \code{FALSE} only person curves
 appear.}
 
-\item{ribbon}{Logical. Draw the posterior credible ribbon?
-Ignored (forced \code{FALSE}) in point‑estimate mode.  Default \code{FALSE}
-so plots stay uncluttered.}
+\item{credibleRibbon}{Logical. Draw the credible ribbon for draws-based
+inputs? Ignored (forced \code{FALSE}) when \code{posterior = NULL}.
+Default \code{FALSE} to keep plots uncluttered.}
 
 \item{cred_level}{Width of the credible ribbon (e.g., \code{0.95}).}
 
@@ -63,24 +63,26 @@ so plots stay uncluttered.}
 \item{ref_col}{Colour for the reference curve.}
 
 \item{person_cols}{Optional vector of colours for person curves; recycled or
-auto‑generated as needed.}
+auto-generated as needed.}
 }
 \value{
 (Invisibly) a \pkg{ggplot2} object; the plot is displayed as a
-side‑effect.
+side-effect.
 }
 \description{
-Plots the LSIRM ICC for \strong{one item} on a user‑defined grid of ability
-values (\code{alpha_grid}).  The function works in two modes:
+Plots the LSIRM ICC for \strong{one item} on a user-defined grid of ability
+values (\code{alpha_grid}). The function supports two ways of supplying inputs:
 }
 \details{
 \itemize{
-\item \strong{Posterior mode} (default) – supply a \code{posterior} list with draws of
-\code{beta}, \code{gamma}, \code{w}, and optionally \code{z}.  The median curve is shown and
-(optionally) a credible ribbon whose width is set by \code{cred_level}.
-\item \strong{Point‑estimate mode} – leave \code{posterior = NULL} and instead supply
-deterministic inputs \code{beta}, \code{gamma}, \code{w_pos}, and (if needed) \code{z_pos}.
-In this mode a single curve per requested group is drawn (no ribbon).
+\item \strong{Point-estimate inputs (default)} — leave \code{posterior = NULL} and
+supply deterministic \code{beta}, \code{gamma}, \code{w_pos}, and (if needed) \code{z_pos}.
+A single curve per requested group is drawn (no ribbon).
+\item \strong{Draws-based inputs} — supply a \code{posterior} list with draws of
+\code{beta}, \code{gamma}, \code{w}, and optionally \code{z}. The plotted curve is the
+\strong{posterior-predictive mean probability} at each θ (i.e., average over
+draws). Optionally add a credible ribbon via \code{credibleRibbon = TRUE}
+with width \code{cred_level}.
 }
 
 The probability model is
@@ -88,7 +90,7 @@ The probability model is
 \deqn{P(Y_{ij}=1 \mid \theta_j,d_{ij})
       = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr),}
 
-where \eqn{d_{ij}=\lVert z_j-w_i\rVert}.  Choice of the reference position
+where \eqn{d_{ij}=\lVert z_j-w_i\rVert}. Choice of the reference position
 (\code{reference = "item"}, \code{"origin"}, or \code{"person-global"}) determines how
 \eqn{d_{ij}} is computed for the \emph{baseline} (grey) curve.
 }
@@ -96,11 +98,11 @@ where \eqn{d_{ij}=\lVert z_j-w_i\rVert}.  Choice of the reference position
 
 \itemize{
 \item \strong{Reference curve} – distance is computed from the chosen reference
-position to the item for every posterior draw (or once in point‑estimate
-mode).  Shown unless \code{compare = FALSE}.
+position to the item for every posterior draw (or once with point-estimate
+inputs). Shown unless \code{compare = FALSE}.
 \item \strong{Person curve(s)} – distance is computed from the latent position(s) of
-respondent(s) listed in \code{person_id}.  Requires posterior (or
-point‑estimate) \code{z} input.
+respondent(s) listed in \code{person_id}. Requires \code{z} (posterior draws or
+point estimates).
 }
 }
 
@@ -109,42 +111,39 @@ point‑estimate) \code{z} input.
 set.seed(1)
 I <- 6; N <- 40; D <- 2; M <- 300           # toy dimensions
 
-## 1. Posterior mode ---------------------------------------------------
-w_base <- matrix(0, I, D); w_base[, 1] <- seq(-1.2, 1.2, length.out = I)  # items spread out
-z_base <- matrix(0, N, D); z_base[, 1] <- rep(c(-0.6, 0.6), length.out = N)  # people in two bands
-
-posterior <- list(
-        beta  = matrix(rnorm(M * I, 0, 0.25), M, I),         # smaller SD -> narrower ribbons
-        gamma = rgamma(M, shape = 300, rate = 300),           # tightly around 1
-        w     = array(rep(w_base, each = M), c(M, I, D)) +
-                array(rnorm(M * I * D, sd = 0.12), c(M, I, D)),
-        z     = array(rep(z_base, each = M), c(M, N, D)) +
-               array(rnorm(M * N * D, sd = 0.12), c(M, N, D))
-)
-
-# population curve + one person; no ribbon (default)
-lsirmicc(item_id   = 2,
-         posterior = posterior,
-         person_id = 15)
-
-# same but with ribbon and three people
-lsirmicc(item_id   = 2,
-         posterior = posterior,
-         person_id = c(22, 31),
-         ribbon    = TRUE,
-         person_cols = c("red", "blue"))
-
-## 2. Point‑estimate mode ---------------------------------------------
+## 1. Point-estimate inputs (default) ---------------------------------
 beta_hat  <- 0.3
 gamma_hat <- 1.2
 w_hat     <- matrix(rnorm(I * D), I, D)
 z_hat     <- matrix(rnorm(N * D), N, D)
 
+# population curve + one person (no ribbon in point-estimate usage)
 lsirmicc(item_id  = 4,
          beta     = beta_hat,
          gamma    = gamma_hat,
          w_pos    = w_hat,
          z_pos    = z_hat,
          person_id = 7)
+
+## 2. Draws-based inputs (posterior list) ------------------------------
+w_base <- matrix(0, I, D); w_base[, 1] <- seq(-1.2, 1.2, length.out = I)
+z_base <- matrix(0, N, D); z_base[, 1] <- rep(c(-0.6, 0.6), length.out = N)
+
+posterior <- list(
+  beta  = matrix(rnorm(M * I, 0, 0.25), M, I),
+  gamma = rgamma(M, shape = 300, rate = 300),
+  w     = array(rep(w_base, each = M), c(M, I, D)) +
+          array(rnorm(M * I * D, sd = 0.12), c(M, I, D)),
+  z     = array(rep(z_base, each = M), c(M, N, D)) +
+          array(rnorm(M * N * D, sd = 0.12), c(M, N, D))
+)
+
+# posterior-predictive mean curve with ribbon and two people
+lsirmicc(item_id   = 2,
+         posterior = posterior,
+         person_id = c(22, 31),
+         credibleRibbon = TRUE,
+         cred_level = 0.95,
+         person_cols = c("red", "blue"))
 
 }

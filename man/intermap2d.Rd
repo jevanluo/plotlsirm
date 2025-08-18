@@ -40,6 +40,10 @@ intermap2d(
   w_shape_color_values = NULL,
   shape_color_gradient_low = "grey80",
   shape_color_gradient_high = "navy",
+  z_shape_color_gradient_low = NULL,
+  z_shape_color_gradient_high = NULL,
+  w_shape_color_gradient_low = NULL,
+  w_shape_color_gradient_high = NULL,
   show_ticks = FALSE,
   xlim_range = NULL,
   ylim_range = NULL,
@@ -56,7 +60,10 @@ intermap2d(
   show_z_shapes = TRUE,
   show_w_shapes = TRUE,
   legend_title = "legend",
-  show_size_legend = FALSE
+  show_size_legend = FALSE,
+  share_gradient_scale = FALSE,
+  legend_title_z = expression(alpha[p]),
+  legend_title_w = expression(beta[i])
 )
 }
 \arguments{
@@ -94,12 +101,24 @@ layer’s color (group/gradient) or fixed color/vector as appropriate.}
 \item{z_shape_fixed_opacity, w_shape_fixed_opacity}{Optional constant opacity (0..1) for shapes.}
 
 \item{z_shape_color_gradient, w_shape_color_gradient}{Logical: color shapes by a gradient
-(darker ⇒ higher). Overrides groups/colors for that layer.}
+(darker ⇒ higher). Overrides groups/colors for that layer. If both are \code{TRUE},
+the gradients can be shared (\code{share_gradient_scale = TRUE}) or separated
+(\code{share_gradient_scale = FALSE}, default).}
 
 \item{z_shape_color_values, w_shape_color_values}{Optional numeric drivers for gradients
 (defaults: \code{alpha} / \code{beta} respectively).}
 
-\item{shape_color_gradient_low, shape_color_gradient_high}{Colors for the gradient scale.}
+\item{shape_color_gradient_low, shape_color_gradient_high}{Global colors for the gradient
+palette. Used directly when \code{share_gradient_scale = TRUE}, or as \strong{fallbacks}
+for layer-specific palettes when \code{share_gradient_scale = FALSE}.}
+
+\item{z_shape_color_gradient_low, z_shape_color_gradient_high}{Optional colors for the
+\strong{persons (z)} gradient when using separate scales. If \code{NULL}, fall back to
+\code{shape_color_gradient_low/high}.}
+
+\item{w_shape_color_gradient_low, w_shape_color_gradient_high}{Optional colors for the
+\strong{items (w)} gradient when using separate scales. If \code{NULL}, fall back to
+\code{shape_color_gradient_low/high}.}
 
 \item{show_ticks}{Logical: draw axis ticks/labels.}
 
@@ -122,6 +141,16 @@ layer’s color (group/gradient) or fixed color/vector as appropriate.}
 \item{legend_title}{Character or expression: the legend title (when shown).}
 
 \item{show_size_legend}{Logical: show a size legend (default \code{FALSE}).}
+
+\item{share_gradient_scale}{Logical. If \code{TRUE}, persons and items share \strong{one}
+gradient/legend (uses \code{shape_color_gradient_low/high} and \code{legend_title}).
+If \code{FALSE} (default), persons and items use \strong{separate} gradients/legends:
+persons mapped to colour (title \code{legend_title_z}) and items mapped to fill
+(title \code{legend_title_w}).}
+
+\item{legend_title_z, legend_title_w}{Titles (character or expressions) for the
+separate z and w gradient legends, used only when
+\code{share_gradient_scale = FALSE} and both gradient mappings are enabled.}
 }
 \value{
 Invisibly returns a \code{ggplot} object; also prints the plot.
@@ -138,6 +167,17 @@ For fixed colors/shapes on both layers, the function creates a simple
 two-entry legend ("Persons", "Items") using constant mappings; when shapes
 are off but labels are on, it builds a labels-only legend with colored
 swatches. The legend title is controlled by \code{legend_title}.
+\item When both persons and items use gradient coloring
+(\code{z_shape_color_gradient = TRUE} and \code{w_shape_color_gradient = TRUE}),
+you can either \strong{share one gradient and legend} by setting
+\code{share_gradient_scale = TRUE} (uses \code{shape_color_gradient_low/high} and
+\code{legend_title}), or show \strong{separate gradients/legends} for z and w by
+keeping \code{share_gradient_scale = FALSE} (default). In separate mode,
+persons use the \strong{color} scale with title \code{legend_title_z}, and items
+use the \strong{fill} scale with title \code{legend_title_w}. Layer-specific palettes
+can be supplied via \code{z_shape_color_gradient_low/high} and
+\code{w_shape_color_gradient_low/high}; if \code{NULL}, the global
+\code{shape_color_gradient_low/high} are used as fallbacks.
 \item Opacity (ggplot “alpha”) and size legends are hidden by default. Set
 \code{show_size_legend = TRUE} to show a size legend when size mapping is used.
 \item When \code{person_colors} / \code{item_colors} are \strong{vectors} and \code{z_label_color} /

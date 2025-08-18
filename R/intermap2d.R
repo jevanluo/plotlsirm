@@ -10,6 +10,17 @@
 #'   two-entry legend ("Persons", "Items") using constant mappings; when shapes
 #'   are off but labels are on, it builds a labels-only legend with colored
 #'   swatches. The legend title is controlled by `legend_title`.
+#' - When both persons and items use gradient coloring
+#'   (`z_shape_color_gradient = TRUE` and `w_shape_color_gradient = TRUE`),
+#'   you can either **share one gradient and legend** by setting
+#'   `share_gradient_scale = TRUE` (uses `shape_color_gradient_low/high` and
+#'   `legend_title`), or show **separate gradients/legends** for z and w by
+#'   keeping `share_gradient_scale = FALSE` (default). In separate mode,
+#'   persons use the **color** scale with title `legend_title_z`, and items
+#'   use the **fill** scale with title `legend_title_w`. Layer-specific palettes
+#'   can be supplied via `z_shape_color_gradient_low/high` and
+#'   `w_shape_color_gradient_low/high`; if `NULL`, the global
+#'   `shape_color_gradient_low/high` are used as fallbacks.
 #' - Opacity (ggplot “alpha”) and size legends are hidden by default. Set
 #'   `show_size_legend = TRUE` to show a size legend when size mapping is used.
 #' - When `person_colors` / `item_colors` are **vectors** and `z_label_color` /
@@ -52,10 +63,20 @@
 #' @param z_shape_fixed_opacity,w_shape_fixed_opacity Optional constant opacity (0..1) for shapes.
 #'
 #' @param z_shape_color_gradient,w_shape_color_gradient Logical: color shapes by a gradient
-#'   (darker ⇒ higher). Overrides groups/colors for that layer.
+#'   (darker ⇒ higher). Overrides groups/colors for that layer. If both are `TRUE`,
+#'   the gradients can be shared (`share_gradient_scale = TRUE`) or separated
+#'   (`share_gradient_scale = FALSE`, default).
 #' @param z_shape_color_values,w_shape_color_values Optional numeric drivers for gradients
 #'   (defaults: `alpha` / `beta` respectively).
-#' @param shape_color_gradient_low,shape_color_gradient_high Colors for the gradient scale.
+#' @param shape_color_gradient_low,shape_color_gradient_high Global colors for the gradient
+#'   palette. Used directly when `share_gradient_scale = TRUE`, or as **fallbacks**
+#'   for layer-specific palettes when `share_gradient_scale = FALSE`.
+#' @param z_shape_color_gradient_low,z_shape_color_gradient_high Optional colors for the
+#'   **persons (z)** gradient when using separate scales. If `NULL`, fall back to
+#'   `shape_color_gradient_low/high`.
+#' @param w_shape_color_gradient_low,w_shape_color_gradient_high Optional colors for the
+#'   **items (w)** gradient when using separate scales. If `NULL`, fall back to
+#'   `shape_color_gradient_low/high`.
 #'
 #' @param show_ticks Logical: draw axis ticks/labels.
 #' @param xlim_range,ylim_range Optional axis limits (symmetric if `NULL`).
@@ -74,6 +95,14 @@
 #' @param show_z_shapes,show_w_shapes Logical: draw shapes for z/w.
 #'
 #' @param legend_title Character or expression: the legend title (when shown).
+#' @param share_gradient_scale Logical. If `TRUE`, persons and items share **one**
+#'   gradient/legend (uses `shape_color_gradient_low/high` and `legend_title`).
+#'   If `FALSE` (default), persons and items use **separate** gradients/legends:
+#'   persons mapped to colour (title `legend_title_z`) and items mapped to fill
+#'   (title `legend_title_w`).
+#' @param legend_title_z,legend_title_w Titles (character or expressions) for the
+#'   separate z and w gradient legends, used only when
+#'   `share_gradient_scale = FALSE` and both gradient mappings are enabled.
 #' @param show_size_legend Logical: show a size legend (default `FALSE`).
 #'
 #' @return Invisibly returns a `ggplot` object; also prints the plot.
@@ -207,6 +236,10 @@ intermap2d <- function(
                 z_shape_color_values   = NULL,  w_shape_color_values   = NULL,
                 shape_color_gradient_low  = "grey80",
                 shape_color_gradient_high = "navy",
+                z_shape_color_gradient_low  = NULL,
+                z_shape_color_gradient_high = NULL,
+                w_shape_color_gradient_low  = NULL,
+                w_shape_color_gradient_high = NULL,
                 # axes
                 show_ticks      = FALSE,
                 xlim_range      = NULL, ylim_range = NULL,
@@ -222,7 +255,10 @@ intermap2d <- function(
                 show_z_shapes   = TRUE,  show_w_shapes = TRUE,
                 # legends
                 legend_title    = "legend",
-                show_size_legend = FALSE
+                show_size_legend = FALSE,
+                share_gradient_scale = FALSE,
+                legend_title_z  = expression(alpha[p]),
+                legend_title_w  = expression(beta[i])
 ) {
         # helpers
         rescale_to_range <- function(x, to = c(0,1)) {
@@ -397,23 +433,43 @@ intermap2d <- function(
         if (show_w_shapes) {
                 if (w_map_color) {
                         if (w_shape_size_scale) {
-                                p <- p + ggplot2::geom_point(
-                                        data = w_df,
-                                        ggplot2::aes(.data$x, .data$y,
-                                                     color = if (w_color_mode == "group") .data$grp else .data$col_var,
-                                                     size  = .data$sz_shape, alpha = .data$op
-                                        ),
-                                        shape = w_shape
-                                )
+                                # NEW: use separate fill gradient for items when both layers use gradients
+                                if (w_color_mode == "gradient" && z_shape_color_gradient && w_shape_color_gradient && !share_gradient_scale) {
+                                        p <- p + ggplot2::geom_point(
+                                                data = w_df,
+                                                ggplot2::aes(.data$x, .data$y,
+                                                             fill  = .data$col_var,
+                                                             size  = .data$sz_shape,
+                                                             alpha = .data$op),
+                                                shape = 21, color = "black"
+                                        )
+                                } else {
+                                        p <- p + ggplot2::geom_point(
+                                                data = w_df,
+                                                ggplot2::aes(.data$x, .data$y,
+                                                             color = if (w_color_mode == "group") .data$grp else .data$col_var,
+                                                             size  = .data$sz_shape, alpha = .data$op),
+                                                shape = w_shape
+                                        )
+                                }
                         } else {
-                                p <- p + ggplot2::geom_point(
-                                        data = w_df,
-                                        ggplot2::aes(.data$x, .data$y,
-                                                     color = if (w_color_mode == "group") .data$grp else .data$col_var,
-                                                     alpha = .data$op
-                                        ),
-                                        shape = w_shape, size = w_shape_size
-                                )
+                                if (w_color_mode == "gradient" && z_shape_color_gradient && w_shape_color_gradient && !share_gradient_scale) {
+                                        p <- p + ggplot2::geom_point(
+                                                data = w_df,
+                                                ggplot2::aes(.data$x, .data$y,
+                                                             fill = .data$col_var,
+                                                             alpha = .data$op),
+                                                shape = 21, size = w_shape_size, color = "black"
+                                        )
+                                } else {
+                                        p <- p + ggplot2::geom_point(
+                                                data = w_df,
+                                                ggplot2::aes(.data$x, .data$y,
+                                                             color = if (w_color_mode == "group") .data$grp else .data$col_var,
+                                                             alpha = .data$op),
+                                                shape = w_shape, size = w_shape_size
+                                        )
+                                }
                         }
                 } else if (both_fixed_single) {
                         if (w_shape_size_scale) {
@@ -479,13 +535,23 @@ intermap2d <- function(
         # labels: items (w)
         if (show_w_labels) {
                 if (w_map_color) {
-                        p <- p + ggplot2::geom_text(
-                                data = w_df,
-                                ggplot2::aes(.data$x, .data$y, label = itemlabels,
-                                             color = if (w_color_mode == "group") .data$grp else .data$col_var,
-                                             size  = if (w_label_size_scale) .data$sz_label else NULL),
-                                fontface = "bold", show.legend = TRUE
-                        )
+                        # NEW: when using separate gradients, keep item labels fixed (no second color scale)
+                        if (w_color_mode == "gradient" && z_shape_color_gradient && w_shape_color_gradient && !share_gradient_scale) {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels,
+                                                     size  = if (w_label_size_scale) .data$sz_label else NULL),
+                                        color = w_label_color, fontface = "bold", show.legend = FALSE
+                                )
+                        } else {
+                                p <- p + ggplot2::geom_text(
+                                        data = w_df,
+                                        ggplot2::aes(.data$x, .data$y, label = itemlabels,
+                                                     color = if (w_color_mode == "group") .data$grp else .data$col_var,
+                                                     size  = if (w_label_size_scale) .data$sz_label else NULL),
+                                        fontface = "bold", show.legend = TRUE
+                                )
+                        }
                 } else if (use_w_label_vector) {
                         p <- p + ggplot2::geom_text(
                                 data = w_df,
@@ -530,11 +596,32 @@ intermap2d <- function(
                                 values = c(Persons = z_shape, Items = w_shape)
                         )
         } else if (any_gradient) {
-                p <- p + ggplot2::scale_color_gradient(
-                        name = legend_title,
-                        low  = shape_color_gradient_low,
-                        high = shape_color_gradient_high
-                )
+                # NEW: if both layers use gradients and we don't share the scale, split into colour (z) and fill (w)
+                if (z_shape_color_gradient && w_shape_color_gradient && !share_gradient_scale) {
+                        # choose layer-specific palettes with fallback to global palette
+                        z_low <- if (!is.null(z_shape_color_gradient_low)) z_shape_color_gradient_low else shape_color_gradient_low
+                        z_high <- if (!is.null(z_shape_color_gradient_high)) z_shape_color_gradient_high else shape_color_gradient_high
+                        w_low <- if (!is.null(w_shape_color_gradient_low)) w_shape_color_gradient_low else shape_color_gradient_low
+                        w_high <- if (!is.null(w_shape_color_gradient_high)) w_shape_color_gradient_high else shape_color_gradient_high
+                        p <- p +
+                                ggplot2::scale_color_gradient(
+                                        name = legend_title_z,
+                                        low  = z_low,
+                                        high = z_high
+                                ) +
+                                ggplot2::scale_fill_gradient(
+                                        name = legend_title_w,
+                                        low  = w_low,
+                                        high = w_high
+                                )
+                } else {
+                        # shared single palette (keeps current behaviour)
+                        p <- p + ggplot2::scale_color_gradient(
+                                name = legend_title,
+                                low  = shape_color_gradient_low,
+                                high = shape_color_gradient_high
+                        )
+                }
         } else if (any_grouping) {
                 p <- p + ggplot2::scale_color_discrete(name = legend_title)
         } else {
