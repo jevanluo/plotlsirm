@@ -2,7 +2,7 @@
 % Please edit documentation in R/strengthplot.R
 \name{strengthplot}
 \alias{strengthplot}
-\title{Item‑strength profile for a single person}
+\title{Item-strength profile for a single person}
 \usage{
 strengthplot(
   z,
@@ -14,14 +14,19 @@ strengthplot(
   ci_level = 0.95,
   reorder = FALSE,
   vertical = TRUE,
-  title = NULL
+  title = NULL,
+  use_gradient = TRUE,
+  gradient_low = "#d9f0d3",
+  gradient_high = "#1b7837",
+  show_gradient_legend = TRUE,
+  single_fill_color = "steelblue"
 )
 }
 \arguments{
-\item{z}{A numeric matrix (\emph{N} × \emph{d}) of person coordinates \strong{or} a \emph{list}
+\item{z}{A numeric matrix (\emph{N} × \emph{d}) of person coordinates \strong{or} a \emph{list}
 of such matrices representing posterior draws.}
 
-\item{w}{A numeric matrix (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list} of
+\item{w}{A numeric matrix (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list} of
 such matrices, matching the structure of \code{z}.}
 
 \item{person_index}{Integer giving the row of \code{z} (or each draw in \code{z})
@@ -33,44 +38,67 @@ distance; default is \code{1}.}
 \item{item_group}{Optional character/factor vector of length \emph{I} assigning
 each item to a group for colour coding and legend.}
 
-\item{item_names}{Optional character vector of item labels.  If \code{NULL}
-defaults to \code{"I1"}, \code{"I2"}, … .}
+\item{item_names}{Optional character vector of item labels. If \code{NULL}
+defaults to \code{"I1"}, \code{"I2"}, … .}
 
-\item{ci_level}{Width of the credible interval (between 0 and 1) when
-posterior draws are given.  Ignored for a single point estimate.}
+\item{ci_level}{Width of the credible interval (between 0 and 1) when
+posterior draws are given. Ignored for a single point estimate.}
 
-\item{reorder}{Logical.  Reorder items on the axis by decreasing strength?
+\item{reorder}{Logical. Reorder items on the axis by decreasing strength?
 Default \code{FALSE}.}
 
-\item{vertical}{Logical.  \code{TRUE} (default) draws vertical bars; \code{FALSE}
+\item{vertical}{Logical. \code{TRUE} (default) draws vertical bars; \code{FALSE}
 flips the axes for a horizontal layout.}
 
 \item{title}{Optional character string to appear as the plot title.}
+
+\item{use_gradient}{Logical. When \code{item_group} is \code{NULL}, colour bars by a
+\strong{strength gradient} (low → high)? Default \code{TRUE}.}
+
+\item{gradient_low, gradient_high}{Colours for the gradient when
+\code{use_gradient = TRUE}. Defaults \code{"#d9f0d3"} (low) to \code{"#1b7837"} (high).}
+
+\item{show_gradient_legend}{Logical. Show a legend for the gradient (only
+when \code{item_group} is \code{NULL} and \code{use_gradient = TRUE})? Default \code{TRUE}.}
+
+\item{single_fill_color}{Single fill colour used when \code{use_gradient = FALSE}
+and \code{item_group} is \code{NULL}. Default \code{"steelblue"}.}
 }
 \value{
-(Invisibly) a \code{ggplot} object containing the bar plot.  The plot is
+(Invisibly) a \code{ggplot} object containing the bar plot. The plot is
 also printed.
 }
 \description{
 For a chosen respondent (\code{person_index}) this function plots the \strong{strength}
-(probability of endorsement) for every item, defined as
+(likelihood of endorsement) for every item, defined as
 \deqn{\exp(-\gamma\,d_{ij})}{exp(-γ·d_ij)}, where \eqn{d_{ij}} is the
 Euclidean distance between the person’s latent position \eqn{z_j} and each
-item position \eqn{w_i}.  When \code{z} and \code{w} are supplied as \emph{lists} of
+item position \eqn{w_i}. When \code{z} and \code{w} are supplied as \emph{lists} of
 matrices (posterior draws), the function summarises the distribution of
-strengths with medians and a \code{ci_level} credible interval.  Bars can be
+strengths with medians and a \code{ci_level} credible interval. Bars can be
 coloured by an item grouping factor, reordered by decreasing strength, and
 displayed either vertically or horizontally.
+}
+\details{
+When \strong{no \code{item_group} is provided}, bars are \strong{colour-mapped by a
+similarity gradient} (low → high) by default. You can disable this behaviour
+and use a single fill colour instead via \code{use_gradient = FALSE}.
 }
 \examples{
 set.seed(1)
 z  <- matrix(rnorm(40), ncol = 2)   # 20 persons
 w  <- matrix(rnorm(30), ncol = 2)   # 15 items
 
-## Point‑estimate strengths for person 5
-strengthplot(z, w, person_index = 5, gamma = 2)
+## 1) Point-estimate strengths for person 5 (default gradient, ungrouped)
+strengthplot(z, w, person_index = 5, gamma = 2,
+             title = "Strengths for person 5 (gradient)")
 
-## Posterior example with credible intervals and item groups
+## 2) Turn off gradient and use a single colour
+strengthplot(z, w, person_index = 5, gamma = 2,
+             use_gradient = FALSE, single_fill_color = "tomato",
+             title = "Strengths for person 5 (single colour)")
+
+## 3) Posterior example with credible intervals and item groups
 draws_z <- replicate(50, z + matrix(rnorm(length(z), sd = 0.1),
                                     nrow(z), ncol(z)), simplify = FALSE)
 draws_w <- replicate(50, w + matrix(rnorm(length(w), sd = 0.1),
@@ -78,6 +106,6 @@ draws_w <- replicate(50, w + matrix(rnorm(length(w), sd = 0.1),
 grp <- rep(c("Core", "Peripheral"), length.out = nrow(w))
 strengthplot(draws_z, draws_w, person_index = 3,
              item_group = grp, ci_level = 0.9, vertical = FALSE,
-             title = "Posterior strength profile for respondent 3")
+             title = "Posterior strength profile for respondent 3")
 
 }

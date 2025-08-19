@@ -5,11 +5,11 @@
 #' is supplied.  Similarity is defined as
 #' \deqn{\exp(-\gamma\,d_{ij})}
 #' where \eqn{d_{ij}} is the
-#' Euclidean distance between items *i* and *j*.  Bars can be color‑coded by a
+#' Euclidean distance between items *i* and *j*.  Bars can be color-coded by a
 #' grouping factor, reordered by decreasing similarity, displayed horizontally
 #' or vertically, and annotated with credible intervals.
 #'
-#' @param w Numeric **matrix** (*I* × *d*) of item coordinates **or** a *list*
+#' @param w Numeric **matrix** (*I* × *d*) of item coordinates **or** a *list*
 #'   of such matrices (posterior draws).  When a list is given the function
 #'   summarises similarity across draws and plots medians with
 #'   `ci_level` credible intervals.
@@ -19,15 +19,24 @@
 #'   decays with distance.  Default is `1`.
 #' @param item_group Optional character/factor vector of length *I* indicating
 #'   group membership for each item.  Used for bar colors and legend.
-#' @param item_names Optional character vector of item labels (length *I*).
-#'   Defaults to `"I1"`, `"I2"`, … if `NULL`.
-#' @param ci_level Numeric between 0 and 1 giving the width of the credible
+#' @param item_names Optional character vector of item labels (length *I*).
+#'   Defaults to `"I1"`, `"I2"`, … if `NULL`.
+#' @param ci_level Numeric between 0 and 1 giving the width of the credible
 #'   interval when `w` is a posterior list.  Ignored for a single draw.
 #' @param reorder Logical.  Reorder items on the axis by decreasing similarity
-#'   to the focal item?  Default `TRUE`.
+#'   to the focal item?  Default `FALSE`.
 #' @param vertical Logical.  `TRUE` (default) plots vertical bars; `FALSE`
 #'   flips the axes for a horizontal layout.
 #' @param title Optional character string added as the plot title.
+#'
+#' @param use_gradient Logical. When `item_group` is `NULL`, color bars by a
+#'   **similarity gradient** (low→high). Default `TRUE`.
+#' @param gradient_low,gradient_high Colors for the similarity gradient when
+#'   `use_gradient = TRUE`. Defaults `"#d9f0d3"` (low) to `"#1b7837"` (high).
+#' @param show_gradient_legend Logical. Show legend for the similarity gradient
+#'   (only when `item_group` is `NULL` and `use_gradient = TRUE`)? Default `TRUE`.
+#' @param single_fill_color Single fill color when `use_gradient = FALSE`
+#'   and `item_group` is `NULL`. Default `"steelblue"`.
 #'
 #' @return (Invisibly) a `ggplot` object.  The plot is also drawn as a side
 #'   effect.
@@ -41,15 +50,24 @@
 #' w  <- matrix(rnorm(40), ncol = 2)   # 20 items
 #' gp <- sample(c("Math", "Verbal"), nrow(w), replace = TRUE)
 #'
-#' ## Single estimate
-#' itemsimilarity(w, focal_item = 3, gamma = 2, item_group = gp,
-#'                title = "Similarity to item 3")
+#' ## 1) Single estimate, default gradient (ungrouped)
+#' itemsimilarity(w, focal_item = 3, gamma = 2,
+#'                title = "Similarity to item 3 (gradient)")
 #'
-#' ## Posterior list with credible intervals
+#' ## 2) Single estimate, turn off gradient and use one color (ungrouped)
+#' itemsimilarity(w, focal_item = 3, gamma = 2,
+#'                use_gradient = FALSE, single_fill_color = "tomato",
+#'                title = "Similarity to item 3 (single color)")
+#'
+#' ## 3) Grouped bars (gradient ignored because groups are used)
+#' itemsimilarity(w, focal_item = 3, gamma = 2, item_group = gp,
+#'                title = "Similarity to item 3 (grouped)")
+#'
+#' ## 4) Posterior list with credible intervals (ungrouped, gradient)
 #' draws <- replicate(100, w + matrix(rnorm(length(w), sd = 0.1),
 #'                                    nrow(w), ncol(w)), simplify = FALSE)
 #' itemsimilarity(draws, focal_item = "I10", ci_level = 0.9,
-#'                vertical = FALSE, item_group = gp)
+#'                vertical = FALSE, show_gradient_legend = FALSE)
 #'
 #' @export
 itemsimilarity <- function(
@@ -61,8 +79,16 @@ itemsimilarity <- function(
                 ci_level    = 0.95,
                 reorder     = FALSE,
                 vertical    = TRUE,
-                title       = NULL
+                title       = NULL,
+                use_gradient         = TRUE,
+                gradient_low         = "#d9f0d3",
+                gradient_high        = "#1b7837",
+                show_gradient_legend = TRUE,
+                single_fill_color    = "steelblue"
 ) {
+        if (!is.numeric(gamma) || length(gamma) != 1 || gamma <= 0)
+                stop("`gamma` must be a positive scalar.")
+
         sim_fun  <- function(d) exp(-gamma * d)
         posterior <- is.list(w)
 
@@ -98,12 +124,25 @@ itemsimilarity <- function(
                                  similarity = sim,
                                  group = grp)
 
-                p <- if (is.null(item_group)) {
-                        ggplot2::ggplot(df, ggplot2::aes(x = .data$item, y = .data$similarity, fill = .data$similarity)) +
-                                ggplot2::geom_col() +
-                                ggplot2::scale_fill_gradientn(colours = c("#d9f0d3", "#1b7837"), guide = "none")
+                if (is.null(item_group)) {
+                        if (isTRUE(use_gradient)) {
+                                p <- ggplot2::ggplot(df,
+                                                     ggplot2::aes(x = .data$item, y = .data$similarity, fill = .data$similarity)) +
+                                        ggplot2::geom_col() +
+                                        ggplot2::scale_fill_gradient(
+                                                name = "Similarity",
+                                                low  = gradient_low,
+                                                high = gradient_high,
+                                                guide = if (isTRUE(show_gradient_legend)) "legend" else "none"
+                                        )
+                        } else {
+                                p <- ggplot2::ggplot(df,
+                                                     ggplot2::aes(x = .data$item, y = .data$similarity)) +
+                                        ggplot2::geom_col(fill = single_fill_color)
+                        }
                 } else {
-                        ggplot2::ggplot(df, ggplot2::aes(x = .data$item, y = .data$similarity, fill = .data$group)) +
+                        p <- ggplot2::ggplot(df,
+                                             ggplot2::aes(x = .data$item, y = .data$similarity, fill = .data$group)) +
                                 ggplot2::geom_col() +
                                 ggplot2::scale_fill_brewer(palette = "Set3", name = "Item group")
                 }
@@ -136,15 +175,38 @@ itemsimilarity <- function(
                                  upper  = upr[keep],
                                  group  = grp)
 
-                p <- if (is.null(item_group)) {
-                        ggplot2::ggplot(df, ggplot2::aes(x = .data$item, y = .data$median, fill = .data$median)) +
-                                ggplot2::geom_col() +
-                                ggplot2::geom_errorbar(ggplot2::aes(ymin = .data$lower, ymax = .data$upper), width = 0.25) +
-                                ggplot2::scale_fill_gradientn(colours = c("#d9f0d3", "#1b7837"), guide = "none")
+                if (is.null(item_group)) {
+                        if (isTRUE(use_gradient)) {
+                                p <- ggplot2::ggplot(df,
+                                                     ggplot2::aes(x = .data$item, y = .data$median, fill = .data$median)) +
+                                        ggplot2::geom_col() +
+                                        ggplot2::geom_errorbar(
+                                                ggplot2::aes(ymin = .data$lower, ymax = .data$upper),
+                                                width = 0.25
+                                        ) +
+                                        ggplot2::scale_fill_gradient(
+                                                name = "Similarity",
+                                                low  = gradient_low,
+                                                high = gradient_high,
+                                                guide = if (isTRUE(show_gradient_legend)) "legend" else "none"
+                                        )
+                        } else {
+                                p <- ggplot2::ggplot(df,
+                                                     ggplot2::aes(x = .data$item, y = .data$median)) +
+                                        ggplot2::geom_col(fill = single_fill_color) +
+                                        ggplot2::geom_errorbar(
+                                                ggplot2::aes(ymin = .data$lower, ymax = .data$upper),
+                                                width = 0.25
+                                        )
+                        }
                 } else {
-                        ggplot2::ggplot(df, ggplot2::aes(x = .data$item, y = .data$median, fill = .data$group)) +
+                        p <- ggplot2::ggplot(df,
+                                             ggplot2::aes(x = .data$item, y = .data$median, fill = .data$group)) +
                                 ggplot2::geom_col() +
-                                ggplot2::geom_errorbar(ggplot2::aes(ymin = .data$lower, ymax = .data$upper), width = 0.25) +
+                                ggplot2::geom_errorbar(
+                                        ggplot2::aes(ymin = .data$lower, ymax = .data$upper),
+                                        width = 0.25
+                                ) +
                                 ggplot2::scale_fill_brewer(palette = "Set3", name = "Item group")
                 }
         }
@@ -152,23 +214,22 @@ itemsimilarity <- function(
         ## --- orientation -------------------------------------------------
         if (!vertical) {
                 p <- p + ggplot2::coord_flip() +
-                        ggplot2::labs(x = NULL, y = NULL)                  # we’ll relabel below
+                        ggplot2::labs(x = NULL, y = NULL)  # relabel below
         }
 
         ## --- axis labels & scales ---------------------------------------
         if (vertical) {
                 p <- p +
-                        labs(x = NULL, y = "Similarity") +
-                        scale_y_continuous(
+                        ggplot2::labs(x = NULL, y = "Similarity") +
+                        ggplot2::scale_y_continuous(
                                 limits = c(0, 1),
                                 breaks  = seq(0, 1, 0.2),
                                 expand  = ggplot2::expansion(mult = c(0, 0.02))
                         )
-
-        } else {   # coord_flip() will move y → x visually
+        } else {   # coord_flip() moves y → x visually; keep scale on y
                 p <- p +
-                        labs(y = NULL, x = "Similarity") +
-                        scale_y_continuous(          # <<-- stay on y, not x
+                        ggplot2::labs(y = NULL, x = "Similarity") +
+                        ggplot2::scale_y_continuous(
                                 limits = c(0, 1),
                                 breaks  = seq(0, 1, 0.2),
                                 expand  = ggplot2::expansion(mult = c(0, 0.02))
@@ -191,4 +252,3 @@ itemsimilarity <- function(
         print(p)
         invisible(p)
 }
-

@@ -13,11 +13,16 @@ itemsimilarity(
   ci_level = 0.95,
   reorder = FALSE,
   vertical = TRUE,
-  title = NULL
+  title = NULL,
+  use_gradient = TRUE,
+  gradient_low = "#d9f0d3",
+  gradient_high = "#1b7837",
+  show_gradient_legend = TRUE,
+  single_fill_color = "steelblue"
 )
 }
 \arguments{
-\item{w}{Numeric \strong{matrix} (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list}
+\item{w}{Numeric \strong{matrix} (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list}
 of such matrices (posterior draws).  When a list is given the function
 summarises similarity across draws and plots medians with
 \code{ci_level} credible intervals.}
@@ -31,19 +36,31 @@ decays with distance.  Default is \code{1}.}
 \item{item_group}{Optional character/factor vector of length \emph{I} indicating
 group membership for each item.  Used for bar colors and legend.}
 
-\item{item_names}{Optional character vector of item labels (length \emph{I}).
-Defaults to \code{"I1"}, \code{"I2"}, … if \code{NULL}.}
+\item{item_names}{Optional character vector of item labels (length \emph{I}).
+Defaults to \code{"I1"}, \code{"I2"}, … if \code{NULL}.}
 
-\item{ci_level}{Numeric between 0 and 1 giving the width of the credible
+\item{ci_level}{Numeric between 0 and 1 giving the width of the credible
 interval when \code{w} is a posterior list.  Ignored for a single draw.}
 
 \item{reorder}{Logical.  Reorder items on the axis by decreasing similarity
-to the focal item?  Default \code{TRUE}.}
+to the focal item?  Default \code{FALSE}.}
 
 \item{vertical}{Logical.  \code{TRUE} (default) plots vertical bars; \code{FALSE}
 flips the axes for a horizontal layout.}
 
 \item{title}{Optional character string added as the plot title.}
+
+\item{use_gradient}{Logical. When \code{item_group} is \code{NULL}, color bars by a
+\strong{similarity gradient} (low→high). Default \code{TRUE}.}
+
+\item{gradient_low, gradient_high}{Colors for the similarity gradient when
+\code{use_gradient = TRUE}. Defaults \code{"#d9f0d3"} (low) to \code{"#1b7837"} (high).}
+
+\item{show_gradient_legend}{Logical. Show legend for the similarity gradient
+(only when \code{item_group} is \code{NULL} and \code{use_gradient = TRUE})? Default \code{TRUE}.}
+
+\item{single_fill_color}{Single fill color when \code{use_gradient = FALSE}
+and \code{item_group} is \code{NULL}. Default \code{"steelblue"}.}
 }
 \value{
 (Invisibly) a \code{ggplot} object.  The plot is also drawn as a side
@@ -55,7 +72,7 @@ space, optionally including posterior uncertainty bands when a list of draws
 is supplied.  Similarity is defined as
 \deqn{\exp(-\gamma\,d_{ij})}
 where \eqn{d_{ij}} is the
-Euclidean distance between items \emph{i} and \emph{j}.  Bars can be color‑coded by a
+Euclidean distance between items \emph{i} and \emph{j}.  Bars can be color-coded by a
 grouping factor, reordered by decreasing similarity, displayed horizontally
 or vertically, and annotated with credible intervals.
 }
@@ -64,14 +81,23 @@ set.seed(1)
 w  <- matrix(rnorm(40), ncol = 2)   # 20 items
 gp <- sample(c("Math", "Verbal"), nrow(w), replace = TRUE)
 
-## Single estimate
-itemsimilarity(w, focal_item = 3, gamma = 2, item_group = gp,
-               title = "Similarity to item 3")
+## 1) Single estimate, default gradient (ungrouped)
+itemsimilarity(w, focal_item = 3, gamma = 2,
+               title = "Similarity to item 3 (gradient)")
 
-## Posterior list with credible intervals
+## 2) Single estimate, turn off gradient and use one color (ungrouped)
+itemsimilarity(w, focal_item = 3, gamma = 2,
+               use_gradient = FALSE, single_fill_color = "tomato",
+               title = "Similarity to item 3 (single color)")
+
+## 3) Grouped bars (gradient ignored because groups are used)
+itemsimilarity(w, focal_item = 3, gamma = 2, item_group = gp,
+               title = "Similarity to item 3 (grouped)")
+
+## 4) Posterior list with credible intervals (ungrouped, gradient)
 draws <- replicate(100, w + matrix(rnorm(length(w), sd = 0.1),
                                    nrow(w), ncol(w)), simplify = FALSE)
 itemsimilarity(draws, focal_item = "I10", ci_level = 0.9,
-               vertical = FALSE, item_group = gp)
+               vertical = FALSE, show_gradient_legend = FALSE)
 
 }
