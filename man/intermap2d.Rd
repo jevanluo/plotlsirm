@@ -78,13 +78,13 @@ intermap2d(
 \item{alpha, beta}{Optional vectors used to scale shape/label sizes, opacity,
 and (optionally) gradients for persons/items, respectively.}
 
-\item{z_shape_size_scale, w_shape_size_scale}{Logical: scale \strong{shape} sizes by alpha/beta.}
+\item{z_shape_size_scale, w_shape_size_scale}{Logical: scale shape sizes by alpha/beta.}
 
 \item{z_shape_size_range, w_shape_size_range}{Length-2 numeric: shape size ranges (when scaling).}
 
 \item{z_shape_size, w_shape_size}{Numeric: fixed shape sizes when size scaling is OFF.}
 
-\item{z_label_size_scale, w_label_size_scale}{Logical: scale \strong{label} sizes.
+\item{z_label_size_scale, w_label_size_scale}{Logical: scale label sizes.
 If \code{NULL}, defaults to the corresponding shape-size flag.}
 
 \item{z_label_size_range, w_label_size_range}{Length-2 numeric: label size ranges.}
@@ -92,9 +92,9 @@ If \code{NULL}, defaults to the corresponding shape-size flag.}
 \item{z_label_color, w_label_color}{Label colors; if \code{NULL}, labels follow the
 layer's color (group/gradient) or fixed color/vector as appropriate.}
 
-\item{z_label_size, w_label_size}{Fixed \strong{label} sizes when not scaling.}
+\item{z_label_size, w_label_size}{Fixed label sizes when not scaling.}
 
-\item{z_shape_opacity_scale, w_shape_opacity_scale}{Logical: scale \strong{shape opacity} by alpha/beta.}
+\item{z_shape_opacity_scale, w_shape_opacity_scale}{Logical: scale shape opacity by alpha/beta.}
 
 \item{z_shape_opacity_range, w_shape_opacity_range}{Length-2 numeric: opacity ranges.}
 
@@ -109,15 +109,15 @@ the gradients can be shared (\code{share_gradient_scale = TRUE}) or separated
 (defaults: \code{alpha} / \code{beta} respectively).}
 
 \item{shape_color_gradient_low, shape_color_gradient_high}{Global colors for the gradient
-palette. Used directly when \code{share_gradient_scale = TRUE}, or as \strong{fallbacks}
+palette. Used directly when \code{share_gradient_scale = TRUE}, or as fallbacks
 for layer-specific palettes when \code{share_gradient_scale = FALSE}.}
 
 \item{z_shape_color_gradient_low, z_shape_color_gradient_high}{Optional colors for the
-\strong{persons (z)} gradient when using separate scales. If \code{NULL}, fall back to
+persons (z) gradient when using separate scales. If \code{NULL}, fall back to
 \code{shape_color_gradient_low/high}.}
 
 \item{w_shape_color_gradient_low, w_shape_color_gradient_high}{Optional colors for the
-\strong{items (w)} gradient when using separate scales. If \code{NULL}, fall back to
+items (w) gradient when using separate scales. If \code{NULL}, fall back to
 \code{shape_color_gradient_low/high}.}
 
 \item{show_ticks}{Logical: draw axis ticks/labels.}
@@ -130,7 +130,7 @@ for layer-specific palettes when \code{share_gradient_scale = FALSE}.}
 
 \item{z_shape, w_shape}{ggplot2 shape codes for persons/items (see \code{?ggplot2::geom_point}).}
 
-\item{z_shape_color, w_shape_color}{Fixed fallback \strong{shape} colors when not mapping.}
+\item{z_shape_color, w_shape_color}{Fixed fallback shape colors when not mapping.}
 
 \item{z_border_width}{Stroke width for z shapes (when applicable).}
 
@@ -145,7 +145,7 @@ for layer-specific palettes when \code{share_gradient_scale = FALSE}.}
 \item{share_gradient_scale}{Logical. If \code{TRUE}, persons and items share \strong{one}
 gradient/legend (uses \code{shape_color_gradient_low/high} and \code{legend_title}).
 If \code{FALSE} (default), persons and items use \strong{separate} gradients/legends:
-persons mapped to colour (title \code{legend_title_z}) and items mapped to fill
+persons mapped to color (title \code{legend_title_z}) and items mapped to fill
 (title \code{legend_title_w}).}
 
 \item{legend_title_z, legend_title_w}{Titles (character or expressions) for the
@@ -162,7 +162,7 @@ Person parameter \eqn{\alpha_p}{alpha_p}, item parameter \eqn{\beta_i}{beta_i}.
 \details{
 \strong{Coloring & legends}
 \itemize{
-\item A color legend appears when colors are \strong{mapped} via groups or gradients.
+\item A color legend appears when colors are mapped via groups or gradients.
 For fixed colors/shapes on both layers, the function creates a simple
 two-entry legend ("Persons", "Items") using constant mappings; when shapes
 are off but labels are on, it builds a labels-only legend with colored
@@ -173,8 +173,8 @@ you can either \strong{share one gradient and legend} by setting
 \code{share_gradient_scale = TRUE} (uses \code{shape_color_gradient_low/high} and
 \code{legend_title}), or show \strong{separate gradients/legends} for z and w by
 keeping \code{share_gradient_scale = FALSE} (default). In separate mode,
-persons use the \strong{color} scale with title \code{legend_title_z}, and items
-use the \strong{fill} scale with title \code{legend_title_w}. Layer-specific palettes
+persons use the color scale with title \code{legend_title_z}, and items
+use the fill scale with title \code{legend_title_w}. Layer-specific palettes
 can be supplied via \code{z_shape_color_gradient_low/high} and
 \code{w_shape_color_gradient_low/high}; if \code{NULL}, the global
 \code{shape_color_gradient_low/high} are used as fallbacks.

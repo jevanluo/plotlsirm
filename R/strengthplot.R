@@ -10,8 +10,8 @@
 #' colored by an item grouping factor, reordered by decreasing strength, and
 #' displayed either vertically or horizontally.
 #'
-#' When **no `item_group` is provided**, bars are **color-mapped by a
-#' similarity gradient** (low -> high) by default. You can disable this behavior
+#' When no `item_group` is provided, bars are color-mapped by a
+#' similarity gradient (low -> high) by default. You can disable this behavior
 #' and use a single fill color instead via `use_gradient = FALSE`.
 #'
 #' @param z A numeric matrix (\eqn{N \times d}{N x d}) of person coordinates **or** a *list*

@@ -80,8 +80,8 @@ colored by an item grouping factor, reordered by decreasing strength, and
 displayed either vertically or horizontally.
 }
 \details{
-When \strong{no \code{item_group} is provided}, bars are \strong{color-mapped by a
-similarity gradient} (low -> high) by default. You can disable this behavior
+When no \code{item_group} is provided, bars are color-mapped by a
+similarity gradient (low -> high) by default. You can disable this behavior
 and use a single fill color instead via \code{use_gradient = FALSE}.
 }
 \examples{

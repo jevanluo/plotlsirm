@@ -5,7 +5,7 @@
 #'
 #' @details
 #' **Coloring & legends**
-#' - A color legend appears when colors are **mapped** via groups or gradients.
+#' - A color legend appears when colors are mapped via groups or gradients.
 #'   For fixed colors/shapes on both layers, the function creates a simple
 #'   two-entry legend ("Persons", "Items") using constant mappings; when shapes
 #'   are off but labels are on, it builds a labels-only legend with colored
@@ -16,8 +16,8 @@
 #'   `share_gradient_scale = TRUE` (uses `shape_color_gradient_low/high` and
 #'   `legend_title`), or show **separate gradients/legends** for z and w by
 #'   keeping `share_gradient_scale = FALSE` (default). In separate mode,
-#'   persons use the **color** scale with title `legend_title_z`, and items
-#'   use the **fill** scale with title `legend_title_w`. Layer-specific palettes
+#'   persons use the color scale with title `legend_title_z`, and items
+#'   use the fill scale with title `legend_title_w`. Layer-specific palettes
 #'   can be supplied via `z_shape_color_gradient_low/high` and
 #'   `w_shape_color_gradient_low/high`; if `NULL`, the global
 #'   `shape_color_gradient_low/high` are used as fallbacks.
@@ -50,15 +50,15 @@
 #' @param alpha,beta Optional vectors used to scale shape/label sizes, opacity,
 #'   and (optionally) gradients for persons/items, respectively.
 #'
-#' @param z_shape_size_scale,w_shape_size_scale Logical: scale **shape** sizes by alpha/beta.
+#' @param z_shape_size_scale,w_shape_size_scale Logical: scale shape sizes by alpha/beta.
 #' @param z_shape_size_range,w_shape_size_range Length-2 numeric: shape size ranges (when scaling).
 #' @param z_shape_size,w_shape_size Numeric: fixed shape sizes when size scaling is OFF.
 #'
-#' @param z_label_size_scale,w_label_size_scale Logical: scale **label** sizes.
+#' @param z_label_size_scale,w_label_size_scale Logical: scale label sizes.
 #'   If `NULL`, defaults to the corresponding shape-size flag.
 #' @param z_label_size_range,w_label_size_range Length-2 numeric: label size ranges.
 #'
-#' @param z_shape_opacity_scale,w_shape_opacity_scale Logical: scale **shape opacity** by alpha/beta.
+#' @param z_shape_opacity_scale,w_shape_opacity_scale Logical: scale shape opacity by alpha/beta.
 #' @param z_shape_opacity_range,w_shape_opacity_range Length-2 numeric: opacity ranges.
 #' @param z_shape_fixed_opacity,w_shape_fixed_opacity Optional constant opacity (0..1) for shapes.
 #'
@@ -69,13 +69,13 @@
 #' @param z_shape_color_values,w_shape_color_values Optional numeric drivers for gradients
 #'   (defaults: `alpha` / `beta` respectively).
 #' @param shape_color_gradient_low,shape_color_gradient_high Global colors for the gradient
-#'   palette. Used directly when `share_gradient_scale = TRUE`, or as **fallbacks**
+#'   palette. Used directly when `share_gradient_scale = TRUE`, or as fallbacks
 #'   for layer-specific palettes when `share_gradient_scale = FALSE`.
 #' @param z_shape_color_gradient_low,z_shape_color_gradient_high Optional colors for the
-#'   **persons (z)** gradient when using separate scales. If `NULL`, fall back to
+#'   persons (z) gradient when using separate scales. If `NULL`, fall back to
 #'   `shape_color_gradient_low/high`.
 #' @param w_shape_color_gradient_low,w_shape_color_gradient_high Optional colors for the
-#'   **items (w)** gradient when using separate scales. If `NULL`, fall back to
+#'   items (w) gradient when using separate scales. If `NULL`, fall back to
 #'   `shape_color_gradient_low/high`.
 #'
 #' @param show_ticks Logical: draw axis ticks/labels.
@@ -85,10 +85,10 @@
 #' @param figuretitle Optional plot title.
 #'
 #' @param z_shape,w_shape ggplot2 shape codes for persons/items (see `?ggplot2::geom_point`).
-#' @param z_shape_color,w_shape_color Fixed fallback **shape** colors when not mapping.
+#' @param z_shape_color,w_shape_color Fixed fallback shape colors when not mapping.
 #' @param z_border_width Stroke width for z shapes (when applicable).
 #'
-#' @param z_label_size,w_label_size Fixed **label** sizes when not scaling.
+#' @param z_label_size,w_label_size Fixed label sizes when not scaling.
 #' @param z_label_color,w_label_color Label colors; if `NULL`, labels follow the
 #'   layer's color (group/gradient) or fixed color/vector as appropriate.
 #' @param show_z_labels,show_w_labels Logical: draw labels for z/w.
@@ -98,7 +98,7 @@
 #' @param share_gradient_scale Logical. If `TRUE`, persons and items share **one**
 #'   gradient/legend (uses `shape_color_gradient_low/high` and `legend_title`).
 #'   If `FALSE` (default), persons and items use **separate** gradients/legends:
-#'   persons mapped to colour (title `legend_title_z`) and items mapped to fill
+#'   persons mapped to color (title `legend_title_z`) and items mapped to fill
 #'   (title `legend_title_w`).
 #' @param legend_title_z,legend_title_w Titles (character or expressions) for the
 #'   separate z and w gradient legends, used only when

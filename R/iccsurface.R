@@ -4,7 +4,7 @@
 #' \deqn{P(Y_{pi}=1)=\operatorname{logit}^{-1}\!\bigl(\alpha+\beta-\gamma\,d\bigr)}
 #' on a rectangular grid of *ability* (\eqn{\alpha}{alpha}) and *person-item
 #' distance* (\eqn{d}{d}) values and, by default, renders the resulting
-#' surface interactively with **plotly**.
+#' surface interactively with `plotly`.
 #'
 #' ## Colour options
 #' * **Uniform** - a single-colour surface (`colour_mode = "uniform"`,
@@ -50,7 +50,7 @@
 #'   `prob` (an \eqn{n_{\alpha} \times n_{\mathrm{dist}}}{n_alpha x n_dist} matrix of probabilities).
 #'
 #' @section Dependencies:
-#' Rendering the surface requires the **plotly** package
+#' Rendering the surface requires the `plotly` package
 #' (`install.packages("plotly")`). No external packages are needed when
 #' `plot = FALSE`.
 #'

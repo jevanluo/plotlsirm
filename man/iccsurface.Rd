@@ -69,7 +69,7 @@ Evaluates the LSIRM probability
 \deqn{P(Y_{pi}=1)=\operatorname{logit}^{-1}\!\bigl(\alpha+\beta-\gamma\,d\bigr)}
 on a rectangular grid of \emph{ability} (\eqn{\alpha}{alpha}) and \emph{person-item
 distance} (\eqn{d}{d}) values and, by default, renders the resulting
-surface interactively with \strong{plotly}.
+surface interactively with \code{plotly}.
 }
 \details{
 \subsection{Colour options}{
@@ -93,7 +93,7 @@ the \eqn{\alpha}{alpha}- and \emph{distance} axes so their origins align visuall
 }
 \section{Dependencies}{
 
-Rendering the surface requires the \strong{plotly} package
+Rendering the surface requires the \code{plotly} package
 (\code{install.packages("plotly")}). No external packages are needed when
 \code{plot = FALSE}.
 }
