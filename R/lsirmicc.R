@@ -340,7 +340,7 @@ lsirmicc <- function(item_id,
                 ggplot2::scale_y_continuous(limits = c(0, 1)) +
                 ggplot2::labs(
                         title = paste("LSIRM ICC - Item", item_id),
-                        x     = "\u03b1",
+                        x     = "alpha",
                         y     = "Pr(Response=1)"
                 ) +
                 ggplot2::theme_minimal(base_size = 12) +

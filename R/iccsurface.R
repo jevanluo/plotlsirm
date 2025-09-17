@@ -173,7 +173,7 @@ iccsurface <- function(beta,
                         aspectmode = "cube",
                         xaxis = list(title = "d (distance)",
                                      zeroline = TRUE, zerolinecolor = "black", tick0 = 0),
-                        yaxis = list(title = "\u03b1 (ability)",
+                        yaxis = list(title = "alpha (ability)",
                                      zeroline = TRUE, zerolinecolor = "black", tick0 = 0),
                         zaxis = list(title = "Pr(Y = 1)", zeroline = FALSE)
                 )

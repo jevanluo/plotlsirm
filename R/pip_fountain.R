@@ -3,13 +3,13 @@
 #' Generates the **fountain** variant of a Posterior Interaction Profile (PIP)
 #' plot.
 #' The layout is identical to [`pip_waterfall()`] on the left (posterior
-#' density for the focal respondent’s ability) but **inverts** the right‑hand
-#' panel: each item dot is placed at *–βᵢ* (the “fountain base”) and an arrow
+#' density for the focal respondent’s ability) but **inverts** the right-hand
+#' panel: each item dot is placed at *- \eqn{\beta_i}{beta[i]}* (the “fountain base”) and an arrow
 #' rises to the personalized easiness
-#' \deqn{\delta_{ij} = \beta_i - d_{ij}}{δ_pi = β_i – d_{ij}}.
-#' Distance taken from `distance_mat`. If `gamma` is supplied, distances are
-#' scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
-#' Uncertainty bounds in `distance_low`/`distance_up` are scaled by the same \eqn{\gamma}.
+#' \deqn{\delta_{ij} = \beta_i - d_{ij}}{delta[ij] = beta[i] - d[ij]}.
+#' Distance is taken from `distance_mat`. If `gamma` is supplied, distances are
+#' scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}{delta[ij] = beta[i] - gamma * d[ij]}.
+#' Uncertainty bounds in `distance_low`/`distance_up` are scaled by the same \eqn{\gamma}{gamma}.
 #' Arrows that extend **above** the base indicate the item is *easier* for the
 #' respondent than average; arrows that fall short indicate it is *harder*.
 #'

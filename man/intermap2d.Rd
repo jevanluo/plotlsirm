@@ -156,8 +156,8 @@ separate z and w gradient legends, used only when
 Invisibly returns a \code{ggplot} object; also prints the plot.
 }
 \description{
-Persons (z) and items (w) in a 2-D latent space with flexible styling.
-Person statistic = alpha (α_p), item statistic = beta (β_i).
+Persons (\eqn{z}{z}) and items (\eqn{w}{w}) in a 2D latent space with flexible styling.
+Person parameter \eqn{\alpha_p}{alpha_p}, item parameter \eqn{\beta_i}{beta_i}.
 }
 \details{
 \strong{Coloring & legends}
@@ -208,8 +208,8 @@ are scaled by \code{alpha} / \code{beta} into \code{z_label_size_range} / \code{
 set.seed(1)
 z <- matrix(rnorm(40), 20, 2)  # persons
 w <- matrix(rnorm(30), 15, 2)  # items
-alpha <- rnorm(nrow(z))        # person α
-beta  <- rnorm(nrow(w))        # item β
+alpha <- rnorm(nrow(z))        # person alpha
+beta  <- rnorm(nrow(w))        # item beta
 
 ### 1) minimal, fixed colors & shapes
 intermap2d(z, w)
@@ -232,7 +232,7 @@ intermap2d(
   show_w_labels = TRUE, legend_title = "Cohort / Domain"
 )
 
-### 4) Gradient for persons only (darker = higher α), labels scaled by α
+### 4) Gradient for persons only (darker = higher α), labels scaled by alpha
 intermap2d(
   z, w,
   alpha = alpha,
@@ -245,7 +245,7 @@ intermap2d(
   legend_title = expression(alpha[p])
 )
 
-### 5) Gradient for both α (persons) and β (items), shared legend
+### 5) Gradient for both alpha (persons) and beta (items), shared legend
 intermap2d(
   z, w,
   alpha = alpha, beta = beta,
@@ -254,7 +254,7 @@ intermap2d(
   z_shape_size_scale = TRUE, w_shape_size_scale = TRUE,
   show_z_shapes = TRUE, show_w_shapes = TRUE,
   show_z_labels = FALSE, show_w_labels = FALSE,
-  legend_title = "Intensity (α persons, β items)"
+  legend_title = "Intensity (alpha persons, beta items)"
 )
 
 ### 6) Explicit per-observation colors (vectors) + label-only

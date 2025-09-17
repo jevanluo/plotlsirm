@@ -221,7 +221,7 @@ radarplot <- function(data = NULL,         # Numeric vector (one subject) or mat
                 if (showOverallAbility) {
                         overall_df <- data.frame(x = 0,
                                                  y = - R - 5,
-                                                 label = paste0("\u03b1:", overall_val))
+                                                 label = paste0("alpha: ", overall_val))
                         p <- p + geom_text(data = overall_df, aes(x = .data$x, y = .data$y, label = .data$label),
                                            color = "black", size = 5, fontface = "italic")
                 }
@@ -319,7 +319,7 @@ radarplot <- function(data = NULL,         # Numeric vector (one subject) or mat
                 if (showOverallAbility) {
                         oa_df <- data.frame(x = 4 * i,
                                             y = (R_i - 4),
-                                            label = paste0("\u03b1:", overall_i))
+                                            label = paste0("alpha: ", overall_i))
                         overall_labels_df <- rbind(overall_labels_df, oa_df)
                 }
         }

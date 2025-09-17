@@ -65,13 +65,13 @@ returned invisibly for further tweaking.
 Generates the \strong{fountain} variant of a Posterior Interaction Profile (PIP)
 plot.
 The layout is identical to \code{\link[=pip_waterfall]{pip_waterfall()}} on the left (posterior
-density for the focal respondent’s ability) but \strong{inverts} the right‑hand
-panel: each item dot is placed at \emph{–βᵢ} (the “fountain base”) and an arrow
+density for the focal respondent’s ability) but \strong{inverts} the right-hand
+panel: each item dot is placed at \emph{- \eqn{\beta_i}{beta[i]}} (the “fountain base”) and an arrow
 rises to the personalized easiness
-\deqn{\delta_{ij} = \beta_i - d_{ij}}{δ_pi = β_i – d_{ij}}.
-Distance taken from \code{distance_mat}. If \code{gamma} is supplied, distances are
-scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}.
-Uncertainty bounds in \code{distance_low}/\code{distance_up} are scaled by the same \eqn{\gamma}.
+\deqn{\delta_{ij} = \beta_i - d_{ij}}{delta[ij] = beta[i] - d[ij]}.
+Distance is taken from \code{distance_mat}. If \code{gamma} is supplied, distances are
+scaled before computing deltas, i.e. \eqn{\delta_{ij} = \beta_i - \gamma d_{ij}}{delta[ij] = beta[i] - gamma * d[ij]}.
+Uncertainty bounds in \code{distance_low}/\code{distance_up} are scaled by the same \eqn{\gamma}{gamma}.
 Arrows that extend \strong{above} the base indicate the item is \emph{easier} for the
 respondent than average; arrows that fall short indicate it is \emph{harder}.
 }

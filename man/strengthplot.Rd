@@ -71,9 +71,9 @@ also printed.
 \description{
 For a chosen respondent (\code{person_index}) this function plots the \strong{strength}
 (likelihood of endorsement) for every item, defined as
-\deqn{\exp(-\gamma\,d_{ij})}{exp(-γ·d_ij)}, where \eqn{d_{ij}} is the
-Euclidean distance between the person’s latent position \eqn{z_j} and each
-item position \eqn{w_i}. When \code{z} and \code{w} are supplied as \emph{lists} of
+\deqn{\exp(-\gamma d_{ij})}{exp(-gamma * d_ij)}, where \eqn{d_{ij}} is the
+Euclidean distance between the person’s latent position \eqn{z_j}{z[j]} and each
+item position \eqn{w_i}{w[i]}. When \code{z} and \code{w} are supplied as \emph{lists} of
 matrices (posterior draws), the function summarises the distribution of
 strengths with medians and a \code{ci_level} credible interval. Bars can be
 coloured by an item grouping factor, reordered by decreasing strength, and
