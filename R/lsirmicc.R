@@ -15,11 +15,10 @@
 #'
 #' The probability model is
 #'
-#' \deqn{P(Y_{ij}=1 \mid \theta_j, d_{ij})
-#'       = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr)}
-#' {P(Y_ij = 1 | theta_j, d_ij) = logit^{-1}(theta_j + beta_i - gamma * d_ij)}
+#' \deqn{P(Y_{ij}=1 \mid \theta_{j}, d_{ij})
+#'       = \operatorname{logit}^{-1}\!\bigl(\theta_{j} + \beta_{i} - \gamma\,d_{ij}\bigr)}
 #'
-#' where \eqn{d_{ij} = \lVert z_j - w_i \rVert}{d_ij = ||z_j - w_i||}. Choice of the
+#' where \eqn{d_{ij} = \lVert z_{j} - w_{i} \rVert}. Choice of the
 #' reference position (`reference = "item"`, `"origin"`, or `"person-global"`)
 #' determines how \eqn{d_{ij}} is computed for the *baseline* (grey) curve.
 #'

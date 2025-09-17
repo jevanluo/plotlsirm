@@ -1,7 +1,7 @@
 Package: plotlsirm
 Type: Package
 Title: Plot Toolkit for Latent Space Item Response Models
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(
         given   = "Jinwen",
@@ -15,10 +15,10 @@ Authors@R: c(
         role    = "aut",
         email   = "mjjeon@ucla.edu",
         comment = c(ORCID = "0000-0002-5880-4146")))
-Description: Provides publication‑quality and interactive plots for exploring
-    the posterior output of Latent Space Item Response Models,
-    including Posterior Interaction Profiles, radar charts, 2‑D latent maps,
-    and item‑similarity heat maps.
+Description: Provides publication‑quality and interactive plots for exploring 
+             the posterior output of Latent Space Item Response Models, including 
+             Posterior Interaction Profiles, radar charts, 2‑D latent maps, and 
+             item‑similarity heat maps.
 License: GPL (>= 3)
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
