@@ -3,29 +3,29 @@
 #' For a chosen respondent (`person_index`) this function plots the **strength**
 #' (likelihood of endorsement) for every item, defined as
 #' \deqn{\exp(-\gamma d_{ij})}{exp(-gamma * d_ij)}, where \eqn{d_{ij}} is the
-#' Euclidean distance between the person’s latent position \eqn{z_j}{z[j]} and each
+#' Euclidean distance between the person's latent position \eqn{z_j}{z[j]} and each
 #' item position \eqn{w_i}{w[i]}. When `z` and `w` are supplied as *lists* of
-#' matrices (posterior draws), the function summarises the distribution of
+#' matrices (posterior draws), the function summarizes the distribution of
 #' strengths with medians and a `ci_level` credible interval. Bars can be
-#' coloured by an item grouping factor, reordered by decreasing strength, and
+#' colored by an item grouping factor, reordered by decreasing strength, and
 #' displayed either vertically or horizontally.
 #'
-#' When **no `item_group` is provided**, bars are **colour-mapped by a
-#' similarity gradient** (low → high) by default. You can disable this behaviour
-#' and use a single fill colour instead via `use_gradient = FALSE`.
+#' When **no `item_group` is provided**, bars are **color-mapped by a
+#' similarity gradient** (low -> high) by default. You can disable this behavior
+#' and use a single fill color instead via `use_gradient = FALSE`.
 #'
-#' @param z A numeric matrix (*N* × *d*) of person coordinates **or** a *list*
+#' @param z A numeric matrix (\eqn{N \times d}{N x d}) of person coordinates **or** a *list*
 #'   of such matrices representing posterior draws.
-#' @param w A numeric matrix (*I* × *d*) of item coordinates **or** a *list* of
+#' @param w A numeric matrix (\eqn{I \times d}{I x d}) of item coordinates **or** a *list* of
 #'   such matrices, matching the structure of `z`.
 #' @param person_index Integer giving the row of `z` (or each draw in `z`)
 #'   corresponding to the focal respondent.
 #' @param gamma Positive numeric scalar controlling the decay of strength with
 #'   distance; default is `1`.
 #' @param item_group Optional character/factor vector of length *I* assigning
-#'   each item to a group for colour coding and legend.
+#'   each item to a group for color coding and legend.
 #' @param item_names Optional character vector of item labels. If `NULL`
-#'   defaults to `"I1"`, `"I2"`, … .
+#'   defaults to `"I1"`, `"I2"`,...
 #' @param ci_level Width of the credible interval (between 0 and 1) when
 #'   posterior draws are given. Ignored for a single point estimate.
 #' @param reorder Logical. Reorder items on the axis by decreasing strength?
@@ -34,13 +34,13 @@
 #'   flips the axes for a horizontal layout.
 #' @param title Optional character string to appear as the plot title.
 #'
-#' @param use_gradient Logical. When `item_group` is `NULL`, colour bars by a
-#'   **strength gradient** (low → high)? Default `TRUE`.
-#' @param gradient_low,gradient_high Colours for the gradient when
+#' @param use_gradient Logical. When `item_group` is `NULL`, color bars by a
+#'   **strength gradient** (low -> high)? Default `TRUE`.
+#' @param gradient_low,gradient_high Colors for the gradient when
 #'   `use_gradient = TRUE`. Defaults `"#d9f0d3"` (low) to `"#1b7837"` (high).
 #' @param show_gradient_legend Logical. Show a legend for the gradient (only
 #'   when `item_group` is `NULL` and `use_gradient = TRUE`)? Default `TRUE`.
-#' @param single_fill_color Single fill colour used when `use_gradient = FALSE`
+#' @param single_fill_color Single fill color used when `use_gradient = FALSE`
 #'   and `item_group` is `NULL`. Default `"steelblue"`.
 #'
 #' @return (Invisibly) a `ggplot` object containing the bar plot. The plot is
@@ -59,10 +59,10 @@
 #' strengthplot(z, w, person_index = 5, gamma = 2,
 #'              title = "Strengths for person 5 (gradient)")
 #'
-#' ## 2) Turn off gradient and use a single colour
+#' ## 2) Turn off gradient and use a single color
 #' strengthplot(z, w, person_index = 5, gamma = 2,
 #'              use_gradient = FALSE, single_fill_color = "tomato",
-#'              title = "Strengths for person 5 (single colour)")
+#'              title = "Strengths for person 5 (single color)")
 #'
 #' ## 3) Posterior example with credible intervals and item groups
 #' draws_z <- replicate(50, z + matrix(rnorm(length(z), sd = 0.1),
@@ -85,7 +85,7 @@ strengthplot <- function(
                 reorder     = FALSE,
                 vertical    = TRUE,
                 title       = NULL,
-                # --- new colouring controls for ungrouped plots ---
+                # --- new coloring controls for ungrouped plots ---
                 use_gradient         = TRUE,
                 gradient_low         = "#d9f0d3",
                 gradient_high        = "#1b7837",

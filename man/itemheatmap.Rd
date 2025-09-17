@@ -2,7 +2,7 @@
 % Please edit documentation in R/itemheatmap.R
 \name{itemheatmap}
 \alias{itemheatmap}
-\title{Heat‑map of item–item similarity in latent space}
+\title{Heat-map of item-item similarity in latent space}
 \usage{
 itemheatmap(
   w,
@@ -19,44 +19,44 @@ columns giving the latent coordinates of each item.}
 
 \item{gamma}{Positive numeric scalar.  Controls the steepness of the
 similarity decay; larger values make similarity drop off more quickly.
-Default is \code{1}.}
+Default is \code{1}.}
 
 \item{item_names}{Optional character vector of item labels.  Must have the
-same length as \code{nrow(w)}.  Defaults to \code{"I1"}, \code{"I2"}, … if \code{NULL}.}
+same length as \code{nrow(w)}.  Defaults to \code{"I1"}, \code{"I2"},... if \code{NULL}.}
 
-\item{reorder}{Logical.  If \code{TRUE} (default is \code{FALSE}) the heat‑map is reordered using
+\item{reorder}{Logical.  If \code{TRUE} (default is \code{FALSE}) the heat-map is reordered using
 hierarchical clustering of the distance matrix so that similar items are
 grouped along the diagonal.}
 
 \item{digits}{Integer.  Number of decimal places used when printing similarity
-values inside the cells.  Default is \code{2}.}
+values inside the cells.  Default is \code{2}.}
 
 \item{title}{Optional character string for the plot title.}
 }
 \value{
-(Invisibly) a \code{ggplot} object containing the heat‑map. The plot is
+(Invisibly) a \code{ggplot} object containing the heat-map. The plot is
 also displayed as a side effect.
 }
 \description{
-Draws a lower‑triangle heat‑map (including the main diagonal) of the
+Draws a lower-triangle heat-map (including the main diagonal) of the
 similarity between item positions in a latent space.  Similarity is defined
 as \deqn{\exp(-\gamma\,d_{ij})} where \eqn{d_{ij}} is the Euclidean distance
 between items \emph{i} and \emph{j}, and \eqn{\gamma>0} is a scale parameter
 controlling how quickly similarity decays with distance.  The function can
 optionally reorder items via hierarchical clustering so that similar items
-are placed next to one another, making block‑structure easier to see.
+are placed next to one another, making block-structure easier to see.
 }
 \examples{
 set.seed(123)
-w <- matrix(rnorm(40), ncol = 2)   # 20 items in 2‑D latent space
+w <- matrix(rnorm(40), ncol = 2)   # 20 items in 2-D latent space
 
-# Default heat‑map
+# Default heat-map
 itemheatmap(w)
 
 # Stronger decay (gamma = 3) and custom item names
 itemheatmap(w, gamma = 3, item_names = paste("Item", 1:nrow(w)))
 
-# Turn off re‑ordering
+# Turn off re-ordering
 itemheatmap(w, reorder = FALSE, title = "Fixed item ordering")
 
 }

@@ -5,7 +5,7 @@
 #' `rowSums()` and avoids an explicit loop, so it is fast even for large
 #' matrices.
 #'
-#' @param v Numeric vector of length *d*. The reference point in *d*‑dimensional
+#' @param v Numeric vector of length *d*. The reference point in *d*-dimensional
 #'   space.
 #' @param mat Numeric matrix with *n* rows and *d* columns. Each row is treated
 #'   as a point whose distance from `v` is to be computed.
@@ -15,16 +15,16 @@
 #'   between `v` and each corresponding row of `mat`.
 #'
 #' @details
-#' Internally the function replicates `v` into an *n × d* matrix, subtracts it
-#' from `mat`, squares the element‑wise differences, sums across columns, and
-#' finally takes the square root—i.e.
+#' Internally the function replicates `v` into an \eqn{n \times d}{n x d} matrix, subtracts it
+#' from `mat`, squares the element-wise differences, sums across columns, and
+#' finally takes the square root, i.e.
 #' \deqn{d_i = \sqrt{\sum_{k=1}^d (m_{ik} - v_k)^2}}
 #' for each row *i*.
 #' Because the computation is fully vectorised it is considerably faster than a
-#' simple `apply()` or a for‑loop implementation.
+#' simple `apply()` or a for-loop implementation.
 #'
 #' @examples
-#' # Two‑dimensional example
+#' # Two-dimensional example
 #' v   <- c(0, 0)
 #' mat <- matrix(c(1, 0,
 #'                 0, 2,

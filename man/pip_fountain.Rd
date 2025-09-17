@@ -2,7 +2,7 @@
 % Please edit documentation in R/pip_fountain.R
 \name{pip_fountain}
 \alias{pip_fountain}
-\title{Posterior Interaction Profile — \emph{Fountain} style}
+\title{Posterior Interaction Profile - \emph{Fountain} style}
 \usage{
 pip_fountain(
   alpha,
@@ -20,32 +20,32 @@ pip_fountain(
 )
 }
 \arguments{
-\item{alpha}{Numeric vector of length \emph{N}. Posterior means (or draws) of
+\item{alpha}{Numeric vector of length \emph{N}. Posterior means (or draws) of
 person ability parameters.}
 
-\item{beta}{Numeric vector of length \emph{I}. Posterior means of item easiness
+\item{beta}{Numeric vector of length \emph{I}. Posterior means of item easiness
 parameters.}
 
-\item{distance_mat}{Numeric matrix \emph{N × I} containing the latent distances
+\item{distance_mat}{Numeric matrix \eqn{N \times I}{N x I} containing the latent distances
 \eqn{d_{ij}} between persons and items.}
 
 \item{gamma}{Optional numeric scalar used to multiplicatively rescale
 all distances (and \code{distance_low}/\code{distance_up}, if provided) before
 computing personalized easiness. Defaults to \code{NULL} (no rescaling).}
 
-\item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N})
-providing lower/upper posterior intervals (e.g., 95 \% HDI) for each
-respondent’s \eqn{\alpha_j}.  The focal respondent’s band is shaded.}
+\item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N})
+providing lower/upper posterior intervals (e.g., 95\% HDI) for each
+respondent's \eqn{\alpha_j}.  The focal respondent's band is shaded.}
 
 \item{distance_low, distance_up}{Optional matrices matching \code{distance_mat}
 that give lower/upper HDI bounds for each distance.  When both are
 supplied, dotted vertical lines depict the uncertainty in every
 personalized easiness.}
 
-\item{item_group}{Optional character/factor vector of length \emph{I} defining
+\item{item_group}{Optional character/factor vector of length \emph{I} defining
 item groupings.  Enables color coding and a legend.}
 
-\item{focal_id}{Integer (1 ≤ \code{focal_id} ≤ \emph{N}) selecting the respondent to
+\item{focal_id}{Integer (1 \eqn{\le}{<=} \code{focal_id} \eqn{\le}{<=} \eqn{N}{N}) selecting the respondent to
 highlight.  Defaults to the first row.}
 
 \item{density_adjust}{Positive numeric scalar passed to
@@ -57,7 +57,7 @@ curve); values < 1 decrease it (more detail). Default is \code{2}.}
 y-axis range for both panels.}
 }
 \value{
-A \code{patchwork} object containing the combined left‑ and right‑hand
+A \code{patchwork} object containing the combined left- and right-hand
 \code{ggplot2} panels.  The plot is automatically displayed; the value is
 returned invisibly for further tweaking.
 }
@@ -65,8 +65,8 @@ returned invisibly for further tweaking.
 Generates the \strong{fountain} variant of a Posterior Interaction Profile (PIP)
 plot.
 The layout is identical to \code{\link[=pip_waterfall]{pip_waterfall()}} on the left (posterior
-density for the focal respondent’s ability) but \strong{inverts} the right-hand
-panel: each item dot is placed at \emph{- \eqn{\beta_i}{beta[i]}} (the “fountain base”) and an arrow
+density for the focal respondent's ability) but \strong{inverts} the right-hand
+panel: each item dot is placed at \emph{- \eqn{\beta_i}{beta[i]}} (the "fountain base") and an arrow
 rises to the personalized easiness
 \deqn{\delta_{ij} = \beta_i - d_{ij}}{delta[ij] = beta[i] - d[ij]}.
 Distance is taken from \code{distance_mat}. If \code{gamma} is supplied, distances are
@@ -97,6 +97,6 @@ pip_fountain(alpha, beta, gamma = 1, dist,
 
 }
 \seealso{
-\code{\link[=pip_waterfall]{pip_waterfall()}} for the alternative “waterfall” framing, and
+\code{\link[=pip_waterfall]{pip_waterfall()}} for the alternative "waterfall" framing, and
 \code{\link[=interprofile]{interprofile()}} for a wrapper that switches between the two.
 }

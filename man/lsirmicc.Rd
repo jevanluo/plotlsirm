@@ -26,20 +26,20 @@ lsirmicc(
 
 \item{posterior}{Optional list of draws with components
 \describe{
-\item{\code{beta}}{\code{M × I} matrix of item intercepts.}
+\item{\code{beta}}{\eqn{M \times I}{M x I} matrix of item intercepts.}
 \item{\code{gamma}}{Length-\code{M} vector of distance weights.}
-\item{\code{w}}{Either an \code{M × I × D} array or a length-\code{M} list
-of \code{I × D} matrices of item coordinates.}
+\item{\code{w}}{Either an \eqn{M \times I \times D}{M x I x D} array or a length-\code{M}
+list of \eqn{I \times D}{I x D} matrices of item coordinates.}
 \item{\code{z}}{Optional array/list of person coordinates (same format as
 \code{w}). Only needed if you request \code{person_id} or
 \code{reference = "person-global"}.}
 }}
 
 \item{beta, gamma}{Numeric point estimates used \strong{only} when
-\code{posterior = NULL}.  \code{beta} may be scalar or length-\code{I}.}
+\code{posterior = NULL}. \code{beta} may be scalar or length-\code{I}.}
 
-\item{w_pos, z_pos}{Matrices of point estimates for item (\code{I × D}) and
-person (\code{N × D}) coordinates, used only when \code{posterior = NULL}.}
+\item{w_pos, z_pos}{Matrices of point estimates for item (\eqn{I \times D}{I x D}) and
+person (\eqn{N \times D}{N x D}) coordinates, used only when \code{posterior = NULL}.}
 
 \item{alpha_grid}{Numeric vector of ability values (default
 \code{seq(-4, 4, length.out = 201)}).}
@@ -75,32 +75,33 @@ values (\code{alpha_grid}). The function supports two ways of supplying inputs:
 }
 \details{
 \itemize{
-\item \strong{Point-estimate inputs (default)} — leave \code{posterior = NULL} and
+\item \strong{Point-estimate inputs (default)} - leave \code{posterior = NULL} and
 supply deterministic \code{beta}, \code{gamma}, \code{w_pos}, and (if needed) \code{z_pos}.
 A single curve per requested group is drawn (no ribbon).
-\item \strong{Draws-based inputs} — supply a \code{posterior} list with draws of
+\item \strong{Draws-based inputs} - supply a \code{posterior} list with draws of
 \code{beta}, \code{gamma}, \code{w}, and optionally \code{z}. The plotted curve is the
-\strong{posterior-predictive mean probability} at each θ (i.e., average over
-draws). Optionally add a credible ribbon via \code{credibleRibbon = TRUE}
-with width \code{cred_level}.
+\strong{posterior-predictive mean probability} at each \eqn{\theta}{theta}
+(i.e., average over draws). Optionally add a credible ribbon via
+\code{credibleRibbon = TRUE} with width \code{cred_level}.
 }
 
 The probability model is
 
-\deqn{P(Y_{ij}=1 \mid \theta_j,d_{ij})
-      = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr),}
+\deqn{P(Y_{ij}=1 \mid \theta_j, d_{ij})
+      = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr)}
+{P(Y_ij = 1 | theta_j, d_ij) = logit^{-1}(theta_j + beta_i - gamma * d_ij)}
 
-where \eqn{d_{ij}=\lVert z_j-w_i\rVert}. Choice of the reference position
-(\code{reference = "item"}, \code{"origin"}, or \code{"person-global"}) determines how
-\eqn{d_{ij}} is computed for the \emph{baseline} (grey) curve.
+where \eqn{d_{ij} = \lVert z_j - w_i \rVert}{d_ij = ||z_j - w_i||}. Choice of the
+reference position (\code{reference = "item"}, \code{"origin"}, or \code{"person-global"})
+determines how \eqn{d_{ij}} is computed for the \emph{baseline} (grey) curve.
 }
 \section{Curve types}{
 
 \itemize{
-\item \strong{Reference curve} – distance is computed from the chosen reference
+\item \strong{Reference curve} - distance is computed from the chosen reference
 position to the item for every posterior draw (or once with point-estimate
 inputs). Shown unless \code{compare = FALSE}.
-\item \strong{Person curve(s)} – distance is computed from the latent position(s) of
+\item \strong{Person curve(s)} - distance is computed from the latent position(s) of
 respondent(s) listed in \code{person_id}. Requires \code{z} (posterior draws or
 point estimates).
 }

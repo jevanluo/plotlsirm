@@ -1,10 +1,10 @@
-#' Posterior Interaction Profile — *Fountain* style
+#' Posterior Interaction Profile - *Fountain* style
 #'
 #' Generates the **fountain** variant of a Posterior Interaction Profile (PIP)
 #' plot.
 #' The layout is identical to [`pip_waterfall()`] on the left (posterior
-#' density for the focal respondent’s ability) but **inverts** the right-hand
-#' panel: each item dot is placed at *- \eqn{\beta_i}{beta[i]}* (the “fountain base”) and an arrow
+#' density for the focal respondent's ability) but **inverts** the right-hand
+#' panel: each item dot is placed at *- \eqn{\beta_i}{beta[i]}* (the "fountain base") and an arrow
 #' rises to the personalized easiness
 #' \deqn{\delta_{ij} = \beta_i - d_{ij}}{delta[ij] = beta[i] - d[ij]}.
 #' Distance is taken from `distance_mat`. If `gamma` is supplied, distances are
@@ -13,25 +13,25 @@
 #' Arrows that extend **above** the base indicate the item is *easier* for the
 #' respondent than average; arrows that fall short indicate it is *harder*.
 #'
-#' @param alpha Numeric vector of length *N*. Posterior means (or draws) of
+#' @param alpha Numeric vector of length *N*. Posterior means (or draws) of
 #'   person ability parameters.
-#' @param beta Numeric vector of length *I*. Posterior means of item easiness
+#' @param beta Numeric vector of length *I*. Posterior means of item easiness
 #'   parameters.
-#' @param distance_mat Numeric matrix *N × I* containing the latent distances
+#' @param distance_mat Numeric matrix \eqn{N \times I}{N x I} containing the latent distances
 #'   \eqn{d_{ij}} between persons and items.
 #' @param gamma Optional numeric scalar used to multiplicatively rescale
 #'   all distances (and `distance_low`/`distance_up`, if provided) before
 #'   computing personalized easiness. Defaults to `NULL` (no rescaling).
-#' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*)
-#'   providing lower/upper posterior intervals (e.g., 95 % HDI) for each
-#'   respondent’s \eqn{\alpha_j}.  The focal respondent’s band is shaded.
+#' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*)
+#'   providing lower/upper posterior intervals (e.g., 95% HDI) for each
+#'   respondent's \eqn{\alpha_j}.  The focal respondent's band is shaded.
 #' @param distance_low,distance_up Optional matrices matching `distance_mat`
 #'   that give lower/upper HDI bounds for each distance.  When both are
 #'   supplied, dotted vertical lines depict the uncertainty in every
 #'   personalized easiness.
-#' @param item_group Optional character/factor vector of length *I* defining
+#' @param item_group Optional character/factor vector of length *I* defining
 #'   item groupings.  Enables color coding and a legend.
-#' @param focal_id Integer (1 ≤ `focal_id` ≤ *N*) selecting the respondent to
+#' @param focal_id Integer (1 \eqn{\le}{<=} \code{focal_id} \eqn{\le}{<=} \eqn{N}{N}) selecting the respondent to
 #'   highlight.  Defaults to the first row.
 #' @param density_adjust Positive numeric scalar passed to
 #'   `ggplot2::geom_density(adjust = ...)` to control the smoothness of the
@@ -40,11 +40,11 @@
 #' @param y_limits Optional numeric length-2 vector `c(min, max)` that fixes the
 #'   y-axis range for both panels.
 #'
-#' @return A `patchwork` object containing the combined left‑ and right‑hand
+#' @return A `patchwork` object containing the combined left- and right-hand
 #'   `ggplot2` panels.  The plot is automatically displayed; the value is
 #'   returned invisibly for further tweaking.
 #'
-#' @seealso [`pip_waterfall()`] for the alternative “waterfall” framing, and
+#' @seealso [`pip_waterfall()`] for the alternative "waterfall" framing, and
 #'   [`interprofile()`] for a wrapper that switches between the two.
 #'
 #' @import patchwork

@@ -2,7 +2,7 @@
 % Please edit documentation in R/radarplot.R
 \name{radarplot}
 \alias{radarplot}
-\title{Radar plot of branch‐specific abilities (single or multiple subjects)}
+\title{Radar plot of branch-specific abilities (single or multiple subjects)}
 \usage{
 radarplot(
   data = NULL,
@@ -24,70 +24,69 @@ radarplot(
 )
 }
 \arguments{
-\item{data}{Numeric \strong{vector} (one subject) or \strong{matrix/data‑frame}
-(\emph{m} × \emph{n}) of scores, where \emph{n} =\code{length(labels)} is the number of
-branches.  Rows correspond to subjects when \code{data} is two‑dimensional.}
+\item{data}{Numeric \strong{vector} (one subject) or \strong{matrix/data-frame}
+(\eqn{m \times n}{m x n}) of scores, where \eqn{n}{n} = \code{length(labels)} is the number of
+branches. Rows correspond to subjects when \code{data} is two-dimensional.}
 
-\item{labels}{Character vector of length \emph{n} giving the label for each
+\item{labels}{Character vector of length \eqn{n}{n} giving the label for each
 branch / axis.}
 
-\item{max_radius}{Numeric.  Maximum drawing radius in plot units after the
-scores in \code{ability_range} have been linearly rescaled.  Default \code{100}.}
+\item{max_radius}{Numeric. Maximum drawing radius in plot units after the
+scores in \code{ability_range} have been linearly rescaled. Default \code{100}.}
 
-\item{branch_max}{Numeric.  Reserved for future branch‑specific scaling.
+\item{branch_max}{Numeric. Reserved for future branch-specific scaling.
 Currently ignored.}
 
-\item{overallAbility}{Numeric scalar \emph{or} length‑\emph{m} vector giving the
-overall ability for each subject.  Used to set the radius of the shaded
-background circle for that subject.  If \code{NA} the maximum of
+\item{overallAbility}{Numeric scalar or length-\eqn{m}{m} vector giving the
+overall ability for each subject. Used to set the radius of the shaded
+background circle for that subject. If \code{NA} the maximum of
 \code{ability_range} is used.}
 
-\item{ability_range}{Numeric length‑2 vector \verb{[min, max]} defining the scale
-of the input scores.  These limits are mapped to the interval
-\verb{[0, max_radius]}.}
+\item{ability_range}{Numeric length-2 vector \verb{[min, max]} defining the scale
+of the input scores. These limits are mapped to the interval
+\verb{[0, max_radius]}.}
 
-\item{abilityCutoffs}{Numeric.  Reserved for future color gradations; not
+\item{abilityCutoffs}{Numeric. Reserved for future color gradations; not
 used in the current version.}
 
 \item{bgColors}{Character vector of colors for the shaded background
-circles.  Only the first element is used at present.}
+circles. Only the first element is used at present.}
 
-\item{markerInd}{Numeric vector (0 = hollow, 1 = solid) of length \emph{n}
-indicating the point style for each branch.  When \code{data} is a matrix this
-can be supplied as an \emph{m} × \emph{n} matrix so each subject has its own marker
+\item{markerInd}{Numeric vector (0 = hollow, 1 = solid) of length \eqn{n}{n}
+indicating the point style for each branch. When \code{data} is a matrix this
+can be supplied as an \eqn{m \times n}{m x n} matrix so each subject has its own marker
 pattern.}
 
-\item{point_cex}{Numeric point size for branch markers.  Default \code{4}.}
+\item{point_cex}{Numeric point size for branch markers. Default \code{4}.}
 
-\item{subjectLabels}{Optional character vector of length \emph{m} naming each
-subject in multi‑subject mode.  Row names of \code{data} are used when
-available; otherwise \code{"Subject 1"}, \code{"Subject 2"}, … are generated.}
+\item{subjectLabels}{Optional character vector of length \eqn{m}{m} naming each
+subject in multi-subject mode. Row names of \code{data} are used when
+available; otherwise \code{"Subject 1"}, \code{"Subject 2"}, ... are generated.}
 
-\item{sampleColors}{Character vector of length \emph{m} giving the polygon/point
-r for each subject.  Defaults to a distinct hue palette if \code{NULL}.}
+\item{sampleColors}{Character vector of length \eqn{m}{m} giving the polygon/point
+color for each subject. Defaults to a distinct hue palette if \code{NULL}.}
 
-\item{showOverallAbility}{Logical.  If \code{TRUE}, prints each subject’s overall
+\item{showOverallAbility}{Logical. If \code{TRUE}, prints each subject's overall
 ability beneath their label.}
 
 \item{title}{Optional plot title.}
 
 \item{plot_margin}{A \code{ggplot2::margin()} object controlling the outer
-whitespace around the figure.  Default adds 20 pt on every side.}
+whitespace around the figure. Default adds 20 pt on every side.}
 
-\item{label_angle_offset}{Numeric scalar or length‑\emph{n} vector specifying (in
+\item{label_angle_offset}{Numeric scalar or length-\eqn{n}{n} vector specifying (in
 degrees) how much to rotate each branch label relative to its default
-tangential orientation.  Useful for fine‑tuning readability.}
+tangential orientation. Useful for fine-tuning readability.}
 }
 \value{
 A \code{ggplot} object representing the radar chart (also printed as a
 side effect).
 }
 \description{
-Draws a radar / spider chart in which each axis (“branch”) represents a
-domain‑specific ability and the radial extent marks the attained score.
-\emph{Single‑subject mode} shades the overall‑ability circle and fills the polygon
-formed by the branch scores.
-\emph{Multi‑subject mode} overlays several polygons on a common background,
+Draws a radar / spider chart in which each axis ("branch") represents a
+domain-specific ability and the radial extent marks the attained score.
+\emph{Single-subject mode} shades the overall-ability circle and fills the polygon
+formed by the branch scores. \emph{Multi-subject mode} overlays several polygons on a common background,
 optionally coloring, labelling, and annotating each subject.
 }
 \examples{
@@ -104,10 +103,10 @@ radarplot(strength, labels = names(strength),
 ## Multiple subjects ---------------------------------------------
 set.seed(1)
 #### strength for 3 persons on 5 items
-dat <- matrix(rnorm(15,3,1), nrow = 3,
+dat <- matrix(rnorm(15, 3, 1), nrow = 3,
               dimnames = list(NULL, c("item1", "item2", "item3", "item4", "item5")))
 radarplot(dat, labels = colnames(dat),
-          overallAbility = c(-1.8,0.5,2.5),
+          overallAbility = c(-1.8, 0.5, 2.5),
           subjectLabels  = c("Alice", "Bob", "Cara"),
           sampleColors   = c("#1b9e77", "#d95f02", "#7570b3"),
           showOverallAbility = TRUE,

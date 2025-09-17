@@ -1,12 +1,12 @@
 #' Rescale a numeric vector to a new range
 #'
 #' Linearly transforms the values in `x` so they fall within a specified
-#' interval. Useful, for example, when mapping latent‐space coordinates to
+#' interval. Useful, for example, when mapping latent-space coordinates to
 #' aesthetic ranges (point sizes, color scales, etc.) in a plot.
 #'
 #' @param x Numeric vector. The data to be rescaled.
-#' @param to Numeric vector of length 2 giving the lower and upper limits of
-#'   the target range. Defaults to `c(0, 1)`.
+#' @param to Numeric vector of length 2 giving the lower and upper limits of
+#'   the target range. Defaults to `c(0, 1)`.
 #' @param na.rm Logical. Should missing values be ignored when computing the
 #'   source range? Defaults to `TRUE`. Any `NA`s in `x` are returned unchanged.
 #'
@@ -15,7 +15,7 @@
 #'   `NA`s.
 #'
 #' @details
-#' If all non‑missing values in `x` are identical, the function returns the
+#' If all non-missing values in `x` are identical, the function returns the
 #' midpoint of the target range (`mean(to)`) for those elements to avoid
 #' division by zero.
 #'
@@ -23,10 +23,10 @@
 #' set.seed(123)
 #' x <- rnorm(5)
 #'
-#' # Default 0–1 range
+#' # Default 0~1 range
 #' rescale_to_range(x)
 #'
-#' # Rescale to −1–1
+#' # Rescale to -1~1
 #' rescale_to_range(x, to = c(-1, 1))
 #'
 #' # Preserve NAs but ignore them when determining the range

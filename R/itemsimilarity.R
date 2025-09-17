@@ -9,7 +9,7 @@
 #' grouping factor, reordered by decreasing similarity, displayed horizontally
 #' or vertically, and annotated with credible intervals.
 #'
-#' @param w Numeric **matrix** (*I* × *d*) of item coordinates **or** a *list*
+#' @param w Numeric matrix (\eqn{I \times d}{I x d}) of item coordinates or a list
 #'   of such matrices (posterior draws).  When a list is given the function
 #'   summarises similarity across draws and plots medians with
 #'   `ci_level` credible intervals.
@@ -20,7 +20,7 @@
 #' @param item_group Optional character/factor vector of length *I* indicating
 #'   group membership for each item.  Used for bar colors and legend.
 #' @param item_names Optional character vector of item labels (length *I*).
-#'   Defaults to `"I1"`, `"I2"`, … if `NULL`.
+#'   Defaults to `"I1"`, `"I2"`, ... if `NULL`.
 #' @param ci_level Numeric between 0 and 1 giving the width of the credible
 #'   interval when `w` is a posterior list.  Ignored for a single draw.
 #' @param reorder Logical.  Reorder items on the axis by decreasing similarity
@@ -30,7 +30,7 @@
 #' @param title Optional character string added as the plot title.
 #'
 #' @param use_gradient Logical. When `item_group` is `NULL`, color bars by a
-#'   **similarity gradient** (low→high). Default `TRUE`.
+#'   **similarity gradient** (low->high). Default `TRUE`.
 #' @param gradient_low,gradient_high Colors for the similarity gradient when
 #'   `use_gradient = TRUE`. Defaults `"#d9f0d3"` (low) to `"#1b7837"` (high).
 #' @param show_gradient_legend Logical. Show legend for the similarity gradient

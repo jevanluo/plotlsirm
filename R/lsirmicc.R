@@ -3,48 +3,49 @@
 #' Plots the LSIRM ICC for **one item** on a user-defined grid of ability
 #' values (`alpha_grid`). The function supports two ways of supplying inputs:
 #'
-#' * **Point-estimate inputs (default)** — leave `posterior = NULL` and
+#' * **Point-estimate inputs (default)** - leave `posterior = NULL` and
 #'   supply deterministic `beta`, `gamma`, `w_pos`, and (if needed) `z_pos`.
 #'   A single curve per requested group is drawn (no ribbon).
 #'
-#' * **Draws-based inputs** — supply a `posterior` list with draws of
+#' * **Draws-based inputs** - supply a `posterior` list with draws of
 #'   `beta`, `gamma`, `w`, and optionally `z`. The plotted curve is the
-#'   **posterior-predictive mean probability** at each θ (i.e., average over
-#'   draws). Optionally add a credible ribbon via `credibleRibbon = TRUE`
-#'   with width `cred_level`.
+#'   **posterior-predictive mean probability** at each \eqn{\theta}{theta}
+#'   (i.e., average over draws). Optionally add a credible ribbon via
+#'   `credibleRibbon = TRUE` with width `cred_level`.
 #'
 #' The probability model is
 #'
-#' \deqn{P(Y_{ij}=1 \mid \theta_j,d_{ij})
-#'       = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr),}
+#' \deqn{P(Y_{ij}=1 \mid \theta_j, d_{ij})
+#'       = \operatorname{logit}^{-1}\!\bigl(\theta_j + \beta_i - \gamma\,d_{ij}\bigr)}
+#' {P(Y_ij = 1 | theta_j, d_ij) = logit^{-1}(theta_j + beta_i - gamma * d_ij)}
 #'
-#' where \eqn{d_{ij}=\lVert z_j-w_i\rVert}. Choice of the reference position
-#' (`reference = "item"`, `"origin"`, or `"person-global"`) determines how
-#' \eqn{d_{ij}} is computed for the *baseline* (grey) curve.
+#' where \eqn{d_{ij} = \lVert z_j - w_i \rVert}{d_ij = ||z_j - w_i||}. Choice of the
+#' reference position (`reference = "item"`, `"origin"`, or `"person-global"`)
+#' determines how \eqn{d_{ij}} is computed for the *baseline* (grey) curve.
 #'
 #' @section Curve types:
-#' * **Reference curve** – distance is computed from the chosen reference
+#' * **Reference curve** - distance is computed from the chosen reference
 #'   position to the item for every posterior draw (or once with point-estimate
 #'   inputs). Shown unless `compare = FALSE`.
-#' * **Person curve(s)** – distance is computed from the latent position(s) of
+#' * **Person curve(s)** - distance is computed from the latent position(s) of
 #'   respondent(s) listed in `person_id`. Requires `z` (posterior draws or
 #'   point estimates).
 #'
 #' @param item_id   Scalar index of the item to plot.
 #' @param posterior Optional list of draws with components
 #'   \describe{
-#'     \item{`beta`}{\code{M × I} matrix of item intercepts.}
+#'     \item{`beta`}{\eqn{M \times I}{M x I} matrix of item intercepts.}
 #'     \item{`gamma`}{Length-\code{M} vector of distance weights.}
-#'     \item{`w`}{Either an \code{M × I × D} array or a length-\code{M} list
-#'       of \code{I × D} matrices of item coordinates.}
+#'     \item{`w`}{Either an \eqn{M \times I \times D}{M x I x D} array or a length-\code{M}
+#'       list of \eqn{I \times D}{I x D} matrices of item coordinates.}
 #'     \item{`z`}{Optional array/list of person coordinates (same format as
 #'       \code{w}). Only needed if you request \code{person_id} or
 #'       \code{reference = "person-global"}.}
 #'   }
 #' @param beta,gamma Numeric point estimates used **only** when
-#'   \code{posterior = NULL}.  \code{beta} may be scalar or length-\code{I}.
-#' @param w_pos,z_pos Matrices of point estimates for item (\code{I × D}) and
-#'   person (\code{N × D}) coordinates, used only when \code{posterior = NULL}.
+#'   \code{posterior = NULL}. \code{beta} may be scalar or length-\code{I}.
+#' @param w_pos,z_pos Matrices of point estimates for item (\eqn{I \times D}{I x D}) and
+#'   person (\eqn{N \times D}{N x D}) coordinates, used only when \code{posterior = NULL}.
 #' @param alpha_grid Numeric vector of ability values (default
 #'   \code{seq(-4, 4, length.out = 201)}).
 #' @param person_id  \code{NULL} (no person curves) or integer vector of

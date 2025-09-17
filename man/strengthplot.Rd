@@ -23,10 +23,10 @@ strengthplot(
 )
 }
 \arguments{
-\item{z}{A numeric matrix (\emph{N} × \emph{d}) of person coordinates \strong{or} a \emph{list}
+\item{z}{A numeric matrix (\eqn{N \times d}{N x d}) of person coordinates \strong{or} a \emph{list}
 of such matrices representing posterior draws.}
 
-\item{w}{A numeric matrix (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list} of
+\item{w}{A numeric matrix (\eqn{I \times d}{I x d}) of item coordinates \strong{or} a \emph{list} of
 such matrices, matching the structure of \code{z}.}
 
 \item{person_index}{Integer giving the row of \code{z} (or each draw in \code{z})
@@ -36,10 +36,10 @@ corresponding to the focal respondent.}
 distance; default is \code{1}.}
 
 \item{item_group}{Optional character/factor vector of length \emph{I} assigning
-each item to a group for colour coding and legend.}
+each item to a group for color coding and legend.}
 
 \item{item_names}{Optional character vector of item labels. If \code{NULL}
-defaults to \code{"I1"}, \code{"I2"}, … .}
+defaults to \code{"I1"}, \code{"I2"},...}
 
 \item{ci_level}{Width of the credible interval (between 0 and 1) when
 posterior draws are given. Ignored for a single point estimate.}
@@ -52,16 +52,16 @@ flips the axes for a horizontal layout.}
 
 \item{title}{Optional character string to appear as the plot title.}
 
-\item{use_gradient}{Logical. When \code{item_group} is \code{NULL}, colour bars by a
-\strong{strength gradient} (low → high)? Default \code{TRUE}.}
+\item{use_gradient}{Logical. When \code{item_group} is \code{NULL}, color bars by a
+\strong{strength gradient} (low -> high)? Default \code{TRUE}.}
 
-\item{gradient_low, gradient_high}{Colours for the gradient when
+\item{gradient_low, gradient_high}{Colors for the gradient when
 \code{use_gradient = TRUE}. Defaults \code{"#d9f0d3"} (low) to \code{"#1b7837"} (high).}
 
 \item{show_gradient_legend}{Logical. Show a legend for the gradient (only
 when \code{item_group} is \code{NULL} and \code{use_gradient = TRUE})? Default \code{TRUE}.}
 
-\item{single_fill_color}{Single fill colour used when \code{use_gradient = FALSE}
+\item{single_fill_color}{Single fill color used when \code{use_gradient = FALSE}
 and \code{item_group} is \code{NULL}. Default \code{"steelblue"}.}
 }
 \value{
@@ -72,17 +72,17 @@ also printed.
 For a chosen respondent (\code{person_index}) this function plots the \strong{strength}
 (likelihood of endorsement) for every item, defined as
 \deqn{\exp(-\gamma d_{ij})}{exp(-gamma * d_ij)}, where \eqn{d_{ij}} is the
-Euclidean distance between the person’s latent position \eqn{z_j}{z[j]} and each
+Euclidean distance between the person's latent position \eqn{z_j}{z[j]} and each
 item position \eqn{w_i}{w[i]}. When \code{z} and \code{w} are supplied as \emph{lists} of
-matrices (posterior draws), the function summarises the distribution of
+matrices (posterior draws), the function summarizes the distribution of
 strengths with medians and a \code{ci_level} credible interval. Bars can be
-coloured by an item grouping factor, reordered by decreasing strength, and
+colored by an item grouping factor, reordered by decreasing strength, and
 displayed either vertically or horizontally.
 }
 \details{
-When \strong{no \code{item_group} is provided}, bars are \strong{colour-mapped by a
-similarity gradient} (low → high) by default. You can disable this behaviour
-and use a single fill colour instead via \code{use_gradient = FALSE}.
+When \strong{no \code{item_group} is provided}, bars are \strong{color-mapped by a
+similarity gradient} (low -> high) by default. You can disable this behavior
+and use a single fill color instead via \code{use_gradient = FALSE}.
 }
 \examples{
 set.seed(1)
@@ -93,10 +93,10 @@ w  <- matrix(rnorm(30), ncol = 2)   # 15 items
 strengthplot(z, w, person_index = 5, gamma = 2,
              title = "Strengths for person 5 (gradient)")
 
-## 2) Turn off gradient and use a single colour
+## 2) Turn off gradient and use a single color
 strengthplot(z, w, person_index = 5, gamma = 2,
              use_gradient = FALSE, single_fill_color = "tomato",
-             title = "Strengths for person 5 (single colour)")
+             title = "Strengths for person 5 (single color)")
 
 ## 3) Posterior example with credible intervals and item groups
 draws_z <- replicate(50, z + matrix(rnorm(length(z), sd = 0.1),

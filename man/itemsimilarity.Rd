@@ -22,7 +22,7 @@ itemsimilarity(
 )
 }
 \arguments{
-\item{w}{Numeric \strong{matrix} (\emph{I} × \emph{d}) of item coordinates \strong{or} a \emph{list}
+\item{w}{Numeric matrix (\eqn{I \times d}{I x d}) of item coordinates or a list
 of such matrices (posterior draws).  When a list is given the function
 summarises similarity across draws and plots medians with
 \code{ci_level} credible intervals.}
@@ -37,7 +37,7 @@ decays with distance.  Default is \code{1}.}
 group membership for each item.  Used for bar colors and legend.}
 
 \item{item_names}{Optional character vector of item labels (length \emph{I}).
-Defaults to \code{"I1"}, \code{"I2"}, … if \code{NULL}.}
+Defaults to \code{"I1"}, \code{"I2"}, ... if \code{NULL}.}
 
 \item{ci_level}{Numeric between 0 and 1 giving the width of the credible
 interval when \code{w} is a posterior list.  Ignored for a single draw.}
@@ -51,7 +51,7 @@ flips the axes for a horizontal layout.}
 \item{title}{Optional character string added as the plot title.}
 
 \item{use_gradient}{Logical. When \code{item_group} is \code{NULL}, color bars by a
-\strong{similarity gradient} (low→high). Default \code{TRUE}.}
+\strong{similarity gradient} (low->high). Default \code{TRUE}.}
 
 \item{gradient_low, gradient_high}{Colors for the similarity gradient when
 \code{use_gradient = TRUE}. Defaults \code{"#d9f0d3"} (low) to \code{"#1b7837"} (high).}

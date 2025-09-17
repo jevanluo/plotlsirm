@@ -2,7 +2,7 @@
 % Please edit documentation in R/pip_waterfall.R
 \name{pip_waterfall}
 \alias{pip_waterfall}
-\title{Posterior Interaction Profile — \emph{Waterfall} style}
+\title{Posterior Interaction Profile - \emph{Waterfall} style}
 \usage{
 pip_waterfall(
   alpha,
@@ -20,31 +20,31 @@ pip_waterfall(
 )
 }
 \arguments{
-\item{alpha}{Numeric vector of length \emph{N}. Posterior means (or draws) of
+\item{alpha}{Numeric vector of length \emph{N}. Posterior means (or draws) of
 person ability parameters.}
 
-\item{beta}{Numeric vector of length \emph{I}. Posterior means of item easiness
+\item{beta}{Numeric vector of length \emph{I}. Posterior means of item easiness
 parameters.}
 
-\item{distance_mat}{Numeric matrix \emph{N × I} of latent distances
+\item{distance_mat}{Numeric matrix \eqn{N \times I}{N x I} containing the latent distances
 \eqn{d_{pi}} between persons and items.}
 
 \item{gamma}{Optional numeric scalar used to multiplicatively rescale
 all distances (and \code{distance_low}/\code{distance_up}, if provided) before
 computing personalized easiness. Defaults to \code{NULL} (no rescaling).}
 
-\item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N}) giving
-lower/upper bounds (e.g., 95 \% HDI) for each person’s \eqn{\alpha_j}.  If
-provided, the focal respondent’s interval is shaded in pink.}
+\item{alpha_lower, alpha_upper}{Optional numeric vectors (length \emph{N}) giving
+lower/upper bounds (e.g., 95\% HDI) for each person's \eqn{\alpha_j}.  If
+provided, the focal respondent's interval is shaded in pink.}
 
 \item{distance_low, distance_up}{Optional matrices the same size as
 \code{distance_mat} providing lower/upper HDI bounds for the distances.
 When both are supplied, dotted lines visualize the uncertainty in each
 personalised easiness.}
 
-\item{item_group}{Optional character/factor vector of length \emph{I} assigning}
+\item{item_group}{Optional character/factor vector of length \emph{I} assigning}
 
-\item{focal_id}{Integer index (1 ≤ \code{focal_id} ≤ \emph{N}) of the respondent to
+\item{focal_id}{Integer index (1 \eqn{\le}{<=} \code{focal_id} \eqn{\le}{<=} \eqn{N}{N}) of the respondent to
 highlight.  Default is \code{1}.}
 
 \item{density_adjust}{Positive numeric scalar passed to
@@ -58,15 +58,15 @@ y-axis range for both panels.}
 \value{
 A \href{https://patchwork.data-imaginist.com}{\code{patchwork}} object
 containing two \code{ggplot2} panels.  The plot is also displayed as a side
-effect, so the returned object is mainly for further customisation.
+effect, so the returned object is mainly for further customization.
 }
 \description{
 Creates the \strong{waterfall} flavour of a Posterior Interaction Profile (PIP)
-plot, visualising how a single respondent’s latent position (\eqn{\alpha_p})
+plot, visualizing how a single respondent's latent position (\eqn{\alpha_p})
 interacts with every item.
 The left panel shows the posterior density (and optional HDI) of the chosen
-respondent’s ability.
-The right panel (“waterfall”) plots each item’s easiness
+respondent's ability.
+The right panel ("waterfall") plots each item's easiness
 \eqn{\beta_i} as the starting point of a vertical arrow whose tip marks the
 personalized easiness
 \eqn{\delta_{ij} = \beta_i - d_{ij}}, where \eqn{d_{ij}} is the latent
@@ -98,6 +98,6 @@ pip_waterfall(alpha, beta, gamma = 1, dist,
 
 }
 \seealso{
-\code{\link[=pip_fountain]{pip_fountain()}} for the complementary “fountain” layout, and
+\code{\link[=pip_fountain]{pip_fountain()}} for the complementary "fountain" layout, and
 \code{\link[=interprofile]{interprofile()}}  for a thin wrapper that chooses between the two styles.
 }

@@ -2,13 +2,13 @@
 % Please edit documentation in R/interprofile.R
 \name{interprofile}
 \alias{interprofile}
-\title{Draw a Posterior Interaction Profile in either style}
+\title{Draw a Posterior Interaction Profile in either style}
 \usage{
 interprofile(style = c("fountain", "waterfall"), ...)
 }
 \arguments{
 \item{style}{Character string choosing the layout.  Accepts \code{"fountain"}
-(default) or \code{"waterfall"}.  Matching is case‑insensitive and only the
+(default) or \code{"waterfall"}.  Matching is case-insensitive and only the
 first few letters are required (e.g., \code{"wat"}).}
 
 \item{...}{Further arguments passed on to either \code{pip_fountain()} or
@@ -52,7 +52,7 @@ interprofile("waterfall",
 }
 \seealso{
 \itemize{
-\item \code{\link[=pip_fountain]{pip_fountain()}} — “base at −β, arrow up” style
-\item \code{\link[=pip_waterfall]{pip_waterfall()}} — “base at β, arrow down” style
+\item \code{\link[=pip_fountain]{pip_fountain()}} - "base at \eqn{-\beta}{-beta}, arrow up" style
+\item \code{\link[=pip_waterfall]{pip_waterfall()}} - "base at \eqn{\beta}{beta}, arrow down" style
 }
 }

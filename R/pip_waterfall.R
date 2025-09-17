@@ -1,11 +1,11 @@
-#' Posterior Interaction Profile — *Waterfall* style
+#' Posterior Interaction Profile - *Waterfall* style
 #'
 #' Creates the **waterfall** flavour of a Posterior Interaction Profile (PIP)
-#' plot, visualising how a single respondent’s latent position (\eqn{\alpha_p})
+#' plot, visualizing how a single respondent's latent position (\eqn{\alpha_p})
 #' interacts with every item.
 #' The left panel shows the posterior density (and optional HDI) of the chosen
-#' respondent’s ability.
-#' The right panel (“waterfall”) plots each item’s easiness
+#' respondent's ability.
+#' The right panel ("waterfall") plots each item's easiness
 #' \eqn{\beta_i} as the starting point of a vertical arrow whose tip marks the
 #' personalized easiness
 #' \eqn{\delta_{ij} = \beta_i - d_{ij}}, where \eqn{d_{ij}} is the latent
@@ -16,25 +16,25 @@
 #' item is *easier* for the focal respondent than for the average person,
 #' whereas arrows pointing **down** indicate it is *harder*.
 #'
-#' @param alpha Numeric vector of length *N*. Posterior means (or draws) of
+#' @param alpha Numeric vector of length *N*. Posterior means (or draws) of
 #'   person ability parameters.
-#' @param beta Numeric vector of length *I*. Posterior means of item easiness
+#' @param beta Numeric vector of length *I*. Posterior means of item easiness
 #'   parameters.
-#' @param distance_mat Numeric matrix *N × I* of latent distances
+#' @param distance_mat Numeric matrix \eqn{N \times I}{N x I} containing the latent distances
 #'   \eqn{d_{pi}} between persons and items.
 #' @param gamma Optional numeric scalar used to multiplicatively rescale
 #'   all distances (and `distance_low`/`distance_up`, if provided) before
 #'   computing personalized easiness. Defaults to `NULL` (no rescaling).
-#' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*) giving
-#'   lower/upper bounds (e.g., 95 % HDI) for each person’s \eqn{\alpha_j}.  If
-#'   provided, the focal respondent’s interval is shaded in pink.
+#' @param alpha_lower,alpha_upper Optional numeric vectors (length *N*) giving
+#'   lower/upper bounds (e.g., 95% HDI) for each person's \eqn{\alpha_j}.  If
+#'   provided, the focal respondent's interval is shaded in pink.
 #' @param distance_low,distance_up Optional matrices the same size as
 #'   `distance_mat` providing lower/upper HDI bounds for the distances.
 #'   When both are supplied, dotted lines visualize the uncertainty in each
 #'   personalised easiness.
-#' @param item_group Optional character/factor vector of length *I* assigning
+#' @param item_group Optional character/factor vector of length *I* assigning
 #*   each item to a group.  Used to color the item dots and activate a legend.
-#' @param focal_id Integer index (1 ≤ `focal_id` ≤ *N*) of the respondent to
+#' @param focal_id Integer index (1 \eqn{\le}{<=} \code{focal_id} \eqn{\le}{<=} \eqn{N}{N}) of the respondent to
 #'   highlight.  Default is `1`.
 #' @param density_adjust Positive numeric scalar passed to
 #'   `ggplot2::geom_density(adjust = ...)` to control the smoothness of the
@@ -45,9 +45,9 @@
 #'
 #' @return A [`patchwork`](https://patchwork.data-imaginist.com) object
 #'   containing two `ggplot2` panels.  The plot is also displayed as a side
-#'   effect, so the returned object is mainly for further customisation.
+#'   effect, so the returned object is mainly for further customization.
 #'
-#' @seealso [`pip_fountain()`] for the complementary “fountain” layout, and
+#' @seealso [`pip_fountain()`] for the complementary "fountain" layout, and
 #'   [`interprofile()`]  for a thin wrapper that chooses between the two styles.
 #'
 #' @import patchwork
@@ -97,7 +97,7 @@ pip_waterfall <- function(alpha, beta,
         y_max <- max(abs(c(alpha,beta,alpha_lower,alpha_upper,distance_low,distance_up)), na.rm = TRUE)
         y_lims <- if (is.null(y_limits)) c(-y_max, y_max) * 1.2 else y_limits
 
-        ## 1 ─ person table ------------------------------------------------------
+        ## 1 - person table ------------------------------------------------------
         persons <- data.frame(
                 id      = 1:N,
                 alpha   = -alpha,
@@ -105,7 +105,7 @@ pip_waterfall <- function(alpha, beta,
                 alpha_u = if (is.null(alpha_upper)) NA else -alpha_lower
         )
 
-        ## 2 ─ item colors / groups --------------------------------------------
+        ## 2 - item colors / groups --------------------------------------------
         if (is.null(item_group)) {
                 item_group   <- factor(rep("All", I))           # single dummy level
                 fill_map     <- c(All = "grey60")               # one grey swatch
@@ -123,14 +123,14 @@ pip_waterfall <- function(alpha, beta,
                 group   = item_group
         )
 
-        ## 3 ─ convert distance → personalised easiness δ_ij --------------------
+        ## 3 - convert distance → personalised easiness δ_ij --------------------
         delta_mat <- sweep(-distance_mat, 2, beta, FUN = "+")      # β_i − d_ij
         if (!is.null(distance_low))
                 delta_low <- sweep(-distance_low, 2, beta, FUN = "+")
         if (!is.null(distance_up))
                 delta_up  <- sweep(-distance_up,  2, beta, FUN = "+")
 
-        ## 4 ─ long table --------------------------------------------------------
+        ## 4 - long table --------------------------------------------------------
         delta_df <- stats::setNames(as.data.frame(delta_mat), paste0("Item_", 1:I))
 
         long <- delta_df |>
@@ -151,13 +151,13 @@ pip_waterfall <- function(alpha, beta,
 
         sel <- dplyr::filter(long, .data$id == focal_id)[order(as.numeric(items$item_id)), ]
 
-        ## 5 ─ plot limits -------------------------------------------------------
+        ## 5 - plot limits -------------------------------------------------------
         #y_lims <- range(c(alpha, beta, delta_mat,
         #                  alpha_lower, alpha_upper,
         #                  if (exists("delta_low")) delta_low,
         #                  if (exists("delta_up"))  delta_up), na.rm = TRUE)
 
-        ## 6 ─ left panel --------------------------------------------------------
+        ## 6 - left panel --------------------------------------------------------
         left <- ggplot2::ggplot(persons, ggplot2::aes(x = alpha)) +
                 {if (!is.na(sel$alpha_l[1]) && !is.na(sel$alpha_u[1]))
                         ggplot2::annotate("rect",
@@ -177,7 +177,7 @@ pip_waterfall <- function(alpha, beta,
                                axis.ticks.y = ggplot2::element_blank(),
                                panel.grid   = ggplot2::element_blank())
 
-        ## 7 ─ right panel (Waterfall) ------------------------------------------
+        ## 7 - right panel (Waterfall) ------------------------------------------
         arrow_scale <- ggplot2::scale_color_manual(
                 values = c("#2b8cbe", "#e34a33"),
                 labels = c("Easier", "Harder"),
@@ -223,7 +223,7 @@ pip_waterfall <- function(alpha, beta,
                 ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                                axis.text.x = ggplot2::element_text(size = 10))
 
-        ## 8 ─ combine -----------------------------------------------------------
+        ## 8 - combine -----------------------------------------------------------
         (left | right) +
                 patchwork::plot_layout(widths = c(.65, 1), guides = "collect") &
                 ggplot2::theme(plot.margin = ggplot2::margin(0, 0, 0, 0, "cm"),

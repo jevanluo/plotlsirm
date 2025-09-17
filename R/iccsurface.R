@@ -1,57 +1,58 @@
-#' Latent‑Space Item Characteristic *Surface*
+#' Latent-Space Item Characteristic *Surface*
 #'
 #' Evaluates the LSIRM probability
 #' \deqn{P(Y_{pi}=1)=\operatorname{logit}^{-1}\!\bigl(\alpha+\beta-\gamma\,d\bigr)}
-#' on a rectangular grid of *ability* (\eqn{\alpha}) and *person–item
-#' distance* (\eqn{d}) values and, by default, renders the resulting
+#' {P(Y_{pi}=1)=logit^{-1}(alpha+beta-gamma*d)}
+#' on a rectangular grid of *ability* (\eqn{\alpha}{alpha}) and *person-item
+#' distance* (\eqn{d}{d}) values and, by default, renders the resulting
 #' surface interactively with **plotly**.
 #'
 #' ## Colour options
-#' * **Uniform** – a single‐colour surface (`colour_mode = "uniform"`,
-#'   default).  The colour is set by `surface_col`.
-#' * **Gradient** – a continuous *plotly* palette (`colour_mode = "gradient"`);
+#' * **Uniform** - a single-colour surface (`colour_mode = "uniform"`,
+#'   default). The colour is set by `surface_col`.
+#' * **Gradient** - a continuous plotly palette (`colour_mode = "gradient"`);
 #'   the palette is chosen via `palette`, and `dark_high = TRUE` reverses the
-#'   scale so *higher* probabilities appear darker.
+#'   scale so higher probabilities appear darker.
 #'
-#' ## Wire‑frame
-#' Setting `show_grid = TRUE` overlays a black wire‑frame every
-#' `grid_step` rows/columns to emphasise the surface curvature.
+#' ## Wire-frame
+#' Setting `show_grid = TRUE` overlays a black wire-frame every
+#' `grid_step` rows/columns to emphasise the surface curvature.
 #'
-#' The scene’s aspect is fixed to a cube, and bold zero‑lines are drawn on
-#' the \eqn{\alpha}‑ and *distance* axes so their origins align visually.
+#' The scene's aspect is fixed to a cube, and bold zero-lines are drawn on
+#' the \eqn{\alpha}{alpha}- and *distance* axes so their origins align visually.
 #'
-#' @param beta            Numeric scalar \eqn{\beta_i} shifting the surface
-#'   along the probability axis (item “easiness”).
-#' @param alpha_lim,n_alpha Numeric. Range `c(min, max)` and grid size for the
-#'   ability axis.  Default is \eqn{\alpha\in[-4,4]} with 60 points.
-#' @param dist_lim,n_dist  Numeric. Range `c(min, max)` and grid size for the
-#'   distance axis.  Default is \eqn{d\in[0,4]} with 60 points.
-#' @param gamma           Positive scalar controlling how strongly the
+#' @param beta             Numeric scalar \eqn{\beta_i}{beta[i]} shifting the surface
+#'   along the probability axis (item "easiness").
+#' @param alpha_lim,n_alpha Numeric. Range `c(min, max)` and grid size for the
+#'   ability axis. Default is \eqn{\alpha\in[-4,4]}{alpha in [-4,4]} with 60 points.
+#' @param dist_lim,n_dist   Numeric. Range `c(min, max)` and grid size for the
+#'   distance axis. Default is \eqn{d\in[0,4]}{d in [0,4]} with 60 points.
+#' @param gamma            Positive scalar controlling how strongly the
 #'   probability decays with distance.
-#' @param colour_mode     `"uniform"` (default) or `"gradient"`.
-#' @param surface_col     Single colour used when `colour_mode = "uniform"`.
-#' @param palette         Character name of a *plotly* continuous palette
+#' @param colour_mode      `"uniform"` (default) or `"gradient"`.
+#' @param surface_col      Single colour used when `colour_mode = "uniform"`.
+#' @param palette          Character name of a plotly continuous palette
 #'   (e.g. `"Viridis"`, `"Hot"`, `"Blues"`); only used when
 #'   `colour_mode = "gradient"`.
-#' @param dark_high       Logical.  If `TRUE` (default) reverses the palette so
+#' @param dark_high        Logical. If `TRUE` (default) reverses the palette so
 #'   high probabilities map to darker shades.
-#' @param surface_opacity Numeric in (0, 1].  By default the function chooses
-#'   `1` for uniform and `0.9` for gradient surfaces so the wire‑frame remains
+#' @param surface_opacity  Numeric in (0, 1]. By default the function chooses
+#'   `1` for uniform and `0.9` for gradient surfaces so the wire-frame remains
 #'   visible.
-#' @param show_grid       Logical.  Overlay a wire‑frame?  Default `TRUE`.
-#' @param grid_step       Positive integer: draw every `grid_step`‑th row/column
+#' @param show_grid        Logical. Overlay a wire-frame? Default `TRUE`.
+#' @param grid_step        Positive integer: draw every `grid_step`-th row/column
 #'   when `show_grid = TRUE`.
-#' @param plot            Logical.  If `TRUE` (default) return an interactive
-#'   **plotly** surface; if `FALSE` return the raw numeric grid.
+#' @param plot             Logical. If `TRUE` (default) return an interactive
+#'   plotly surface; if `FALSE` return the raw numeric grid.
 #'
 #' @return
-#' * **`plot = TRUE`** – a *plotly* **htmlwidget** (prints automatically).
-#' * **`plot = FALSE`** – a list with components `alpha`, `distance`, and
-#'   `prob` (an `n_alpha × n_dist` matrix of probabilities).
+#' * **`plot = TRUE`** - a plotly htmlwidget (prints automatically).
+#' * **`plot = FALSE`** - a list with components `alpha`, `distance`, and
+#'   `prob` (an \eqn{n_{\alpha} \times n_{\mathrm{dist}}}{n_alpha x n_dist} matrix of probabilities).
 #'
 #' @section Dependencies:
 #' Rendering the surface requires the **plotly** package
-#' (`install.packages("plotly")`).  No external packages are needed when
+#' (`install.packages("plotly")`). No external packages are needed when
 #' `plot = FALSE`.
 #'
 #' @examples
@@ -61,7 +62,7 @@
 #'
 #' \dontrun{
 #' ## Interactive surfaces
-#' ## 1. Uniform single‑colour
+#' ## 1. Uniform single-colour
 #' iccsurface(beta = -0.5)
 #'
 #' ## 2. Gradient "Hot" palette, darker = high P

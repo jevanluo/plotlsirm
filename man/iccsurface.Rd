@@ -2,7 +2,7 @@
 % Please edit documentation in R/iccsurface.R
 \name{iccsurface}
 \alias{iccsurface}
-\title{Latent‑Space Item Characteristic \emph{Surface}}
+\title{Latent-Space Item Characteristic \emph{Surface}}
 \usage{
 iccsurface(
   beta,
@@ -22,79 +22,80 @@ iccsurface(
 )
 }
 \arguments{
-\item{beta}{Numeric scalar \eqn{\beta_i} shifting the surface
-along the probability axis (item “easiness”).}
+\item{beta}{Numeric scalar \eqn{\beta_i}{beta[i]} shifting the surface
+along the probability axis (item "easiness").}
 
-\item{alpha_lim, n_alpha}{Numeric. Range \code{c(min, max)} and grid size for the
-ability axis.  Default is \eqn{\alpha\in[-4,4]} with 60 points.}
+\item{alpha_lim, n_alpha}{Numeric. Range \code{c(min, max)} and grid size for the
+ability axis. Default is \eqn{\alpha\in[-4,4]}{alpha in [-4,4]} with 60 points.}
 
-\item{dist_lim, n_dist}{Numeric. Range \code{c(min, max)} and grid size for the
-distance axis.  Default is \eqn{d\in[0,4]} with 60 points.}
+\item{dist_lim, n_dist}{Numeric. Range \code{c(min, max)} and grid size for the
+distance axis. Default is \eqn{d\in[0,4]}{d in [0,4]} with 60 points.}
 
 \item{gamma}{Positive scalar controlling how strongly the
 probability decays with distance.}
 
-\item{colour_mode}{\code{"uniform"} (default) or \code{"gradient"}.}
+\item{colour_mode}{\code{"uniform"} (default) or \code{"gradient"}.}
 
 \item{surface_col}{Single colour used when \code{colour_mode = "uniform"}.}
 
-\item{palette}{Character name of a \emph{plotly} continuous palette
+\item{palette}{Character name of a plotly continuous palette
 (e.g. \code{"Viridis"}, \code{"Hot"}, \code{"Blues"}); only used when
 \code{colour_mode = "gradient"}.}
 
-\item{dark_high}{Logical.  If \code{TRUE} (default) reverses the palette so
+\item{dark_high}{Logical. If \code{TRUE} (default) reverses the palette so
 high probabilities map to darker shades.}
 
-\item{surface_opacity}{Numeric in (0, 1].  By default the function chooses
-\code{1} for uniform and \code{0.9} for gradient surfaces so the wire‑frame remains
+\item{surface_opacity}{Numeric in (0, 1]. By default the function chooses
+\code{1} for uniform and \code{0.9} for gradient surfaces so the wire-frame remains
 visible.}
 
-\item{show_grid}{Logical.  Overlay a wire‑frame?  Default \code{TRUE}.}
+\item{show_grid}{Logical. Overlay a wire-frame? Default \code{TRUE}.}
 
-\item{grid_step}{Positive integer: draw every \code{grid_step}‑th row/column
+\item{grid_step}{Positive integer: draw every \code{grid_step}-th row/column
 when \code{show_grid = TRUE}.}
 
-\item{plot}{Logical.  If \code{TRUE} (default) return an interactive
-\strong{plotly} surface; if \code{FALSE} return the raw numeric grid.}
+\item{plot}{Logical. If \code{TRUE} (default) return an interactive
+plotly surface; if \code{FALSE} return the raw numeric grid.}
 }
 \value{
 \itemize{
-\item \strong{\code{plot = TRUE}} – a \emph{plotly} \strong{htmlwidget} (prints automatically).
-\item \strong{\code{plot = FALSE}} – a list with components \code{alpha}, \code{distance}, and
-\code{prob} (an \verb{n_alpha × n_dist} matrix of probabilities).
+\item \strong{\code{plot = TRUE}} - a plotly htmlwidget (prints automatically).
+\item \strong{\code{plot = FALSE}} - a list with components \code{alpha}, \code{distance}, and
+\code{prob} (an \eqn{n_{\alpha} \times n_{\mathrm{dist}}}{n_alpha x n_dist} matrix of probabilities).
 }
 }
 \description{
 Evaluates the LSIRM probability
 \deqn{P(Y_{pi}=1)=\operatorname{logit}^{-1}\!\bigl(\alpha+\beta-\gamma\,d\bigr)}
-on a rectangular grid of \emph{ability} (\eqn{\alpha}) and \emph{person–item
-distance} (\eqn{d}) values and, by default, renders the resulting
+{P(Y_{pi}=1)=logit^{-1}(alpha+beta-gamma*d)}
+on a rectangular grid of \emph{ability} (\eqn{\alpha}{alpha}) and \emph{person-item
+distance} (\eqn{d}{d}) values and, by default, renders the resulting
 surface interactively with \strong{plotly}.
 }
 \details{
 \subsection{Colour options}{
 \itemize{
-\item \strong{Uniform} – a single‐colour surface (\code{colour_mode = "uniform"},
-default).  The colour is set by \code{surface_col}.
-\item \strong{Gradient} – a continuous \emph{plotly} palette (\code{colour_mode = "gradient"});
+\item \strong{Uniform} - a single-colour surface (\code{colour_mode = "uniform"},
+default). The colour is set by \code{surface_col}.
+\item \strong{Gradient} - a continuous plotly palette (\code{colour_mode = "gradient"});
 the palette is chosen via \code{palette}, and \code{dark_high = TRUE} reverses the
-scale so \emph{higher} probabilities appear darker.
+scale so higher probabilities appear darker.
 }
 }
 
-\subsection{Wire‑frame}{
+\subsection{Wire-frame}{
 
-Setting \code{show_grid = TRUE} overlays a black wire‑frame every
-\code{grid_step} rows/columns to emphasise the surface curvature.
+Setting \code{show_grid = TRUE} overlays a black wire-frame every
+\code{grid_step} rows/columns to emphasise the surface curvature.
 
-The scene’s aspect is fixed to a cube, and bold zero‑lines are drawn on
-the \eqn{\alpha}‑ and \emph{distance} axes so their origins align visually.
+The scene's aspect is fixed to a cube, and bold zero-lines are drawn on
+the \eqn{\alpha}{alpha}- and \emph{distance} axes so their origins align visually.
 }
 }
 \section{Dependencies}{
 
 Rendering the surface requires the \strong{plotly} package
-(\code{install.packages("plotly")}).  No external packages are needed when
+(\code{install.packages("plotly")}). No external packages are needed when
 \code{plot = FALSE}.
 }
 
@@ -105,7 +106,7 @@ str(surf)
 
 \dontrun{
 ## Interactive surfaces
-## 1. Uniform single‑colour
+## 1. Uniform single-colour
 iccsurface(beta = -0.5)
 
 ## 2. Gradient "Hot" palette, darker = high P

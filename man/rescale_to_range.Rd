@@ -9,8 +9,8 @@ rescale_to_range(x, to = c(0, 1), na.rm = TRUE)
 \arguments{
 \item{x}{Numeric vector. The data to be rescaled.}
 
-\item{to}{Numeric vector of length 2 giving the lower and upper limits of
-the target range. Defaults to \verb{c(0, 1)}.}
+\item{to}{Numeric vector of length 2 giving the lower and upper limits of
+the target range. Defaults to \code{c(0, 1)}.}
 
 \item{na.rm}{Logical. Should missing values be ignored when computing the
 source range? Defaults to \code{TRUE}. Any \code{NA}s in \code{x} are returned unchanged.}
@@ -22,11 +22,11 @@ within \code{to[1]} and \code{to[2]}. The function preserves the positions of
 }
 \description{
 Linearly transforms the values in \code{x} so they fall within a specified
-interval. Useful, for example, when mapping latent‐space coordinates to
+interval. Useful, for example, when mapping latent-space coordinates to
 aesthetic ranges (point sizes, color scales, etc.) in a plot.
 }
 \details{
-If all non‑missing values in \code{x} are identical, the function returns the
+If all non-missing values in \code{x} are identical, the function returns the
 midpoint of the target range (\code{mean(to)}) for those elements to avoid
 division by zero.
 }
@@ -34,10 +34,10 @@ division by zero.
 set.seed(123)
 x <- rnorm(5)
 
-# Default 0–1 range
+# Default 0~1 range
 rescale_to_range(x)
 
-# Rescale to −1–1
+# Rescale to -1~1
 rescale_to_range(x, to = c(-1, 1))
 
 # Preserve NAs but ignore them when determining the range

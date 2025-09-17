@@ -90,7 +90,7 @@ If \code{NULL}, defaults to the corresponding shape-size flag.}
 \item{z_label_size_range, w_label_size_range}{Length-2 numeric: label size ranges.}
 
 \item{z_label_color, w_label_color}{Label colors; if \code{NULL}, labels follow the
-layer’s color (group/gradient) or fixed color/vector as appropriate.}
+layer's color (group/gradient) or fixed color/vector as appropriate.}
 
 \item{z_label_size, w_label_size}{Fixed \strong{label} sizes when not scaling.}
 
@@ -101,7 +101,7 @@ layer’s color (group/gradient) or fixed color/vector as appropriate.}
 \item{z_shape_fixed_opacity, w_shape_fixed_opacity}{Optional constant opacity (0..1) for shapes.}
 
 \item{z_shape_color_gradient, w_shape_color_gradient}{Logical: color shapes by a gradient
-(darker ⇒ higher). Overrides groups/colors for that layer. If both are \code{TRUE},
+(darker indicates higher). Overrides groups/colors for that layer. If both are \code{TRUE},
 the gradients can be shared (\code{share_gradient_scale = TRUE}) or separated
 (\code{share_gradient_scale = FALSE}, default).}
 
@@ -178,7 +178,7 @@ use the \strong{fill} scale with title \code{legend_title_w}. Layer-specific pal
 can be supplied via \code{z_shape_color_gradient_low/high} and
 \code{w_shape_color_gradient_low/high}; if \code{NULL}, the global
 \code{shape_color_gradient_low/high} are used as fallbacks.
-\item Opacity (ggplot “alpha”) and size legends are hidden by default. Set
+\item Opacity (ggplot "alpha") and size legends are hidden by default. Set
 \code{show_size_legend = TRUE} to show a size legend when size mapping is used.
 \item When \code{person_colors} / \code{item_colors} are \strong{vectors} and \code{z_label_color} /
 \code{w_label_color} are \code{NULL}, label colors follow those per-observation vectors.
@@ -232,13 +232,13 @@ intermap2d(
   show_w_labels = TRUE, legend_title = "Cohort / Domain"
 )
 
-### 4) Gradient for persons only (darker = higher α), labels scaled by alpha
+### 4) Gradient for persons only (darker = higher alpha), labels scaled by alpha
 intermap2d(
   z, w,
   alpha = alpha,
   z_shape_color_gradient = TRUE,     # z by gradient
   w_shape_color          = "red",    # w fixed color
-  z_label_size_scale     = TRUE,     # label size ∝ α
+  z_label_size_scale     = TRUE,     # label size proportional to alpha
   show_w_shapes = FALSE,
   show_w_labels = TRUE,
   # shape_color_gradient_low = "grey80", shape_color_gradient_high = "navy",

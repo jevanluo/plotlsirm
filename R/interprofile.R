@@ -1,4 +1,4 @@
-#' Draw a Posterior Interaction Profile in either style
+#' Draw a Posterior Interaction Profile in either style
 #'
 #' Convenience wrapper that calls **[`pip_fountain()`]** (default) or
 #' **[`pip_waterfall()`]** depending on the `style` argument.  All additional
@@ -8,7 +8,7 @@
 #' functions directly.
 #'
 #' @param style Character string choosing the layout.  Accepts `"fountain"`
-#'   (default) or `"waterfall"`.  Matching is case‑insensitive and only the
+#'   (default) or `"waterfall"`.  Matching is case-insensitive and only the
 #'   first few letters are required (e.g., `"wat"`).
 #' @param ... Further arguments passed on to either `pip_fountain()` or
 #'   `pip_waterfall()`.  See those functions for a full description of valid
@@ -18,8 +18,8 @@
 #'   combines the two `ggplot2` panels, invisibly returned after being printed.
 #'
 #' @seealso
-#' * [`pip_fountain()`] — “base at −β, arrow up” style
-#' * [`pip_waterfall()`] — “base at β, arrow down” style
+#' * [`pip_fountain()`] - "base at \eqn{-\beta}{-beta}, arrow up" style
+#' * [`pip_waterfall()`] - "base at \eqn{\beta}{beta}, arrow down" style
 #'
 #' @examples
 #' # Small simulated example -----------------------------------------

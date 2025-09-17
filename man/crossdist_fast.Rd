@@ -7,14 +7,14 @@
 crossdist_fast(z, w, item_labels = NULL)
 }
 \arguments{
-\item{z}{Numeric matrix of shape \emph{N} × \emph{d}. Each row is a point in \emph{d}‑dimensional
-latent space representing a person.}
+\item{z}{Numeric matrix of shape \eqn{N \times d}{N x d}. Each row is a point
+in a d-dimensional latent space representing a person.}
 
-\item{w}{Numeric matrix of shape \emph{I × d}. Each row is a point in \emph{d}‑dimensional
-latent space representing an item.}
+\item{w}{Numeric matrix of shape \eqn{I \times d}{I x d}. Each row is a point
+in a d-dimensional latent space representing an item.}
 
-\item{item_labels}{Optional character or factor vector of length \emph{I} giving a
-group label for each item row in \code{w}.
+\item{item_labels}{Optional character or factor vector of length \eqn{I}{I}
+giving a group label for each item row in \code{w}.
 \itemize{
 \item If supplied, the function first replaces the items in each group with
 their centroid (mean position) so the output contains distances to those
@@ -25,36 +25,36 @@ centroids rather than to individual items.
 \value{
 A numeric distance matrix.
 \itemize{
-\item When \code{item_labels} is \code{NULL}, the result is \emph{N × I}: distance from every
-person to every item.
-\item When \code{item_labels} is provided, the result is \emph{N × G}, where \emph{G} is the
-number of distinct groups.
+\item When \code{item_labels} is \code{NULL}, the result is \eqn{N \times I}{N x I}:
+distance from every person to every item.
+\item When \code{item_labels} is provided, the result is \eqn{N \times G}{N x G},
+where \eqn{G}{G} is the number of distinct groups.
 }
 }
 \description{
-Computes the Euclidean distance between every row of a “person” matrix
-(\code{z}, size \emph{N} × \emph{d}) and every row of an “item” matrix (\code{w}, size \emph{I} × \emph{d}).
-An optional \code{item_labels} argument lets you collapse items into groups first,
-replacing each group with its centroid before distances are calculated—
-handy when you only need person–group distances.
+Computes the Euclidean distance between every row of a "person" matrix
+(\code{z}, shape \eqn{N \times d}{N x d}) and every row of an "item" matrix
+(\code{w}, shape \eqn{I \times d}{I x d}). An optional \code{item_labels} argument
+lets you collapse items into groups first, replacing each group with its
+centroid before distances are calculated.
 }
 \details{
 The computation exploits the identity
-\deqn{\|z_j-w_i\|^2 = \|z_j\|^2 + \|w_i\|^2 - 2 z_j^\top w_i,}{%
-‖z_j−w_i‖² = ‖z_j‖² + ‖w_i‖² − 2 z_jᵀ w_i}
+\deqn{\|z_j - w_i\|^2 = \|z_j\|^2 + \|w_i\|^2 - 2\, z_j^\top w_i}
+{||z_j - w_i||^2 = ||z_j||^2 + ||w_i||^2 - 2 * z_j^T * w_i},
 allowing all pairwise squared distances to be obtained with a single
 matrix multiplication. Negative rounding errors are clipped at zero before
 taking the square root.
 }
 \examples{
 set.seed(42)
-z <- matrix(rnorm(15), nrow = 5)   # 5 persons in 3‑D
-w <- matrix(rnorm(30), nrow = 10)  # 10 items   in 3‑D
+z <- matrix(rnorm(15), nrow = 5)   # 5 persons in 3-D
+w <- matrix(rnorm(30), nrow = 10)  # 10 items in 3-D
 
-# Person–item distances
+# Person-item distances
 d_full <- crossdist_fast(z, w)
 
-# Person–group distances (items grouped into two sets)
+# Person-group distances (items grouped into two sets)
 grp <- rep(c("A", "B"), each = 5)
 d_group <- crossdist_fast(z, w, item_labels = grp)
 

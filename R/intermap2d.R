@@ -21,7 +21,7 @@
 #'   can be supplied via `z_shape_color_gradient_low/high` and
 #'   `w_shape_color_gradient_low/high`; if `NULL`, the global
 #'   `shape_color_gradient_low/high` are used as fallbacks.
-#' - Opacity (ggplot “alpha”) and size legends are hidden by default. Set
+#' - Opacity (ggplot "alpha") and size legends are hidden by default. Set
 #'   `show_size_legend = TRUE` to show a size legend when size mapping is used.
 #' - When `person_colors` / `item_colors` are **vectors** and `z_label_color` /
 #'   `w_label_color` are `NULL`, label colors follow those per-observation vectors.
@@ -63,7 +63,7 @@
 #' @param z_shape_fixed_opacity,w_shape_fixed_opacity Optional constant opacity (0..1) for shapes.
 #'
 #' @param z_shape_color_gradient,w_shape_color_gradient Logical: color shapes by a gradient
-#'   (darker ⇒ higher). Overrides groups/colors for that layer. If both are `TRUE`,
+#'   (darker indicates higher). Overrides groups/colors for that layer. If both are `TRUE`,
 #'   the gradients can be shared (`share_gradient_scale = TRUE`) or separated
 #'   (`share_gradient_scale = FALSE`, default).
 #' @param z_shape_color_values,w_shape_color_values Optional numeric drivers for gradients
@@ -90,7 +90,7 @@
 #'
 #' @param z_label_size,w_label_size Fixed **label** sizes when not scaling.
 #' @param z_label_color,w_label_color Label colors; if `NULL`, labels follow the
-#'   layer’s color (group/gradient) or fixed color/vector as appropriate.
+#'   layer's color (group/gradient) or fixed color/vector as appropriate.
 #' @param show_z_labels,show_w_labels Logical: draw labels for z/w.
 #' @param show_z_shapes,show_w_shapes Logical: draw shapes for z/w.
 #'
@@ -138,13 +138,13 @@
 #'   show_w_labels = TRUE, legend_title = "Cohort / Domain"
 #' )
 #'
-#' ### 4) Gradient for persons only (darker = higher α), labels scaled by alpha
+#' ### 4) Gradient for persons only (darker = higher alpha), labels scaled by alpha
 #' intermap2d(
 #'   z, w,
 #'   alpha = alpha,
 #'   z_shape_color_gradient = TRUE,     # z by gradient
 #'   w_shape_color          = "red",    # w fixed color
-#'   z_label_size_scale     = TRUE,     # label size ∝ α
+#'   z_label_size_scale     = TRUE,     # label size proportional to alpha
 #'   show_w_shapes = FALSE,
 #'   show_w_labels = TRUE,
 #'   # shape_color_gradient_low = "grey80", shape_color_gradient_high = "navy",

@@ -7,7 +7,7 @@
 vec_mat_dist(v, mat)
 }
 \arguments{
-\item{v}{Numeric vector of length \emph{d}. The reference point in \emph{d}‑dimensional
+\item{v}{Numeric vector of length \emph{d}. The reference point in \emph{d}-dimensional
 space.}
 
 \item{mat}{Numeric matrix with \emph{n} rows and \emph{d} columns. Each row is treated
@@ -25,16 +25,16 @@ Calculates the Euclidean distance between a reference vector
 matrices.
 }
 \details{
-Internally the function replicates \code{v} into an \emph{n × d} matrix, subtracts it
-from \code{mat}, squares the element‑wise differences, sums across columns, and
-finally takes the square root—i.e.
+Internally the function replicates \code{v} into an \eqn{n \times d}{n x d} matrix, subtracts it
+from \code{mat}, squares the element-wise differences, sums across columns, and
+finally takes the square root, i.e.
 \deqn{d_i = \sqrt{\sum_{k=1}^d (m_{ik} - v_k)^2}}
 for each row \emph{i}.
 Because the computation is fully vectorised it is considerably faster than a
-simple \code{apply()} or a for‑loop implementation.
+simple \code{apply()} or a for-loop implementation.
 }
 \examples{
-# Two‑dimensional example
+# Two-dimensional example
 v   <- c(0, 0)
 mat <- matrix(c(1, 0,
                 0, 2,
