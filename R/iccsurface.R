@@ -2,7 +2,6 @@
 #'
 #' Evaluates the LSIRM probability
 #' \deqn{P(Y_{pi}=1)=\operatorname{logit}^{-1}\!\bigl(\alpha+\beta-\gamma\,d\bigr)}
-#' {P(Y_{pi}=1)=logit^{-1}(alpha+beta-gamma*d)}
 #' on a rectangular grid of *ability* (\eqn{\alpha}{alpha}) and *person-item
 #' distance* (\eqn{d}{d}) values and, by default, renders the resulting
 #' surface interactively with **plotly**.

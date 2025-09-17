@@ -25,8 +25,7 @@
 #'
 #' @details
 #' The computation exploits the identity
-#' \deqn{\|z_j - w_i\|^2 = \|z_j\|^2 + \|w_i\|^2 - 2\, z_j^\top w_i}
-#' {||z_j - w_i||^2 = ||z_j||^2 + ||w_i||^2 - 2 * z_j^T * w_i},
+#' \deqn{\|z_j-w_i\|^2 = \|z_j\|^2 + \|w_i\|^2 - 2\, z_j^\top w_i.}
 #' allowing all pairwise squared distances to be obtained with a single
 #' matrix multiplication. Negative rounding errors are clipped at zero before
 #' taking the square root.
